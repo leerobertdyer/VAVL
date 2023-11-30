@@ -3,6 +3,10 @@ from app import app
 import requests
 from bs4 import BeautifulSoup
 
+@app.route('/')
+def home():
+    return render_template('home.html')
+
 @app.route('/eagle')
 def eagle():
     
@@ -52,7 +56,7 @@ def eagle():
                 print(v)
     else:
         print(f"Failed to retrieve page. Status code: {resp.status_code}")
-    return render_template('home.html')
+    return eagleEvents
 
 @app.route('/peel')
 def peel():
@@ -103,7 +107,7 @@ def peel():
                 print(v)
     else:
         print(f"Failed to retrieve page. Status code: {resp.status_code}")
-    return render_template('home.html')
+    return peelEvents
 
 
 
@@ -157,7 +161,7 @@ def rabbit():
                 print(v)
     else:
         print(f"Failed to retrieve page. Status code: {resp.status_code}")
-    return render_template('home.html')
+    return rabbitEvents
 
 @app.route('/cherokee')
 def cherokee():
@@ -202,7 +206,7 @@ def cherokee():
                 print(v)
     else:
         print(f"Failed to retrieve page. Status code: {resp.status_code}")
-    return render_template('home.html')
+    return cherokeeEvents
     
     
 @app.route('/salvage')
@@ -252,6 +256,6 @@ def salvage():
                 print(v)
     else:
         print(f"Failed to retrieve page. Status code: {resp.status_code}")
-    return render_template('home.html')
+    return salvageEvents
     
     
