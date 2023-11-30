@@ -158,3 +158,100 @@ def rabbit():
     else:
         print(f"Failed to retrieve page. Status code: {resp.status_code}")
     return render_template('home.html')
+
+@app.route('/cherokee')
+def cherokee():
+    url = 'https://www.harrahscherokeecenterasheville.com/events-tickets/'
+    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36'}
+    resp = requests.get(url, headers=headers)
+    soup = BeautifulSoup(resp.content, 'html.parser')
+    
+    cherokeeEvents = []
+    
+    if resp.status_code == 200:
+        showDivs = soup.find_all("div", class_="list-view")
+        
+        for show in showDivs:
+            try:
+                showDate = show.find("div", class_="event-date").text   
+            except:
+                showDate = "Date/time Not Found"
+            showTime = "Time Not shown"
+            try:
+                showTitle = show.find("div", class_="event-details").find("h3").text
+            except:
+                showTitle = "Title not found"
+            try:
+                showImage = show.find("div", class_="image-wrapper").find("img")['src'] 
+            except:
+                showImage = "app/static/sad.jpg"
+            try:
+                showTickets = show.find("a", class_="event-ticket")['href']
+            except:
+                showTickets = "Tickets Not Found"
+            showCost = "$?"
+            cherokeeEvents.append({
+                "showDate": showDate, 
+                "showTitle": showTitle, 
+                "showTime": showTime, 
+                "showImage": showImage, 
+                "showCost": showCost,
+                "showTickets": showTickets})
+        for show in cherokeeEvents:
+            for v in show.values():
+                print(v)
+    else:
+        print(f"Failed to retrieve page. Status code: {resp.status_code}")
+    return render_template('home.html')
+    
+    
+@app.route('/salvage')
+def salvage():
+    url = 'https://salvagestation.com/events/'
+    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36'}
+    resp = requests.get(url, headers=headers)
+    soup = BeautifulSoup(resp.content, 'html.parser')
+    
+    salvageEvents = []
+    
+    if resp.status_code == 200:
+        showDivs = soup.find_all("div", class_="event-list-wrapper")
+        
+        for show in showDivs:
+            try:
+                showDay = show.find("div", class_="event-list-day").text.strip()
+                showMonth = show.find("div", class_="event-list-month").text.strip()
+                showNum = show.find("div", class_="event-list-number").text.strip()
+                showYear = show.find("div", class_="event-list-year").text.strip()
+                showDate = f"{showDay} {showMonth} {showNum} {showYear}"
+            except:
+                showDate = "Date/time Not Found"
+            showTime = "Time Not shown"
+            try:
+                showTitle = show.find("div", class_="event-list-title").text
+            except:
+                showTitle = "Title not found"
+            try:
+                showImage = show.find("a", class_="event-list-image")["style"][23:-3]
+            except:
+                showImage = "app/static/sad.jpg"
+            try:
+                showTickets = show.find("a", class_="event-list-button buy")['href']
+            except:
+                showTickets = "Tickets Not Found"
+            showCost = "$?"
+            salvageEvents.append({
+                "showDate": showDate, 
+                "showTitle": showTitle, 
+                "showTime": showTime, 
+                "showImage": showImage, 
+                "showCost": showCost,
+                "showTickets": showTickets})
+        for show in salvageEvents:
+            for v in show.values():
+                print(v)
+    else:
+        print(f"Failed to retrieve page. Status code: {resp.status_code}")
+    return render_template('home.html')
+    
+    
