@@ -1,7 +1,9 @@
 from flask import render_template
-from app import app
+from app import app, db
 import requests
 from bs4 import BeautifulSoup
+from .models import Event
+import datetime
 
 @app.route('/')
 def home():
@@ -21,13 +23,11 @@ def eagle():
         showDivs = soup.find_all("div", class_="rhpSingleEvent")
         for show in showDivs:
             try:
-                showDate = show.find(id="eventDate").text 
+                showDay = show.find(id="eventDate").text 
+                showYear = show.find("span", class_="rhp-events-list-separator-month").text[-4:]
+                showDate = showDay + " " + showYear
             except:
                 showDate = "Date Not Found"
-            try:
-                showTime = show.find("div", class_="eventDoorStartDate").find('span').text 
-            except:
-                showTime = "Time not found"
             try:
                 showTitle = show.find(id="eventTitle").find('h2').text
             except:
@@ -40,20 +40,21 @@ def eagle():
                 showTickets = show.find(id="ctaspan-44637").find("a")['href']
             except:
                 showTickets = "Tickets Not Found"
-            try:
-                showCost = show.find("div", class_="eventCost").find('span').text or "$?"
-            except:
-                showCost = "$?"
             eagleEvents.append({
                 "showDate": showDate, 
                 "showTitle": showTitle, 
-                "showTime": showTime, 
                 "showImage": showImage, 
-                "showCost": showCost,
                 "showTickets": showTickets})
         for show in eagleEvents:
-            for v in show.values():
-                print(v)
+            new_event = Event(
+                venue = "Grey Eagle",
+                title = show["showTitle"],
+                show_date = datetime.strptime(show["showDate"], "%a, %b %d %Y"),
+                tickets = show["showTickets"],
+                image = show["showImage"],
+            )
+            db.session.add(new_event)
+            db.session.commit()
     else:
         print(f"Failed to retrieve page. Status code: {resp.status_code}")
     return eagleEvents
@@ -72,13 +73,11 @@ def peel():
         showDivs = soup.find_all("div", class_="rhpSingleEvent")
         for show in showDivs:
             try:
-                showDate = show.find(id="eventDate").text 
+                showDay = show.find(id="eventDate").text 
+                showYear = show.find('span', class_="rhp-events-list-separator-month").text[-4:]
+                showDate = showDay + " " + showYear
             except:
                 showDate = "Date Not Found"
-            try:
-                showTime = show.find("div", class_="eventDoorStartDate").find('span').text 
-            except:
-                showTime = "Time not found"
             try:
                 showTitle = show.find(id="eventTitle").find('h2').text
             except:
@@ -91,20 +90,21 @@ def peel():
                 showTickets = show.find("div", class_="rhp-event-list-cta").find("a")['href']
             except:
                 showTickets = "Tickets Not Found"
-            try:
-                showCost = show.find("div", class_="eventCost").find('span').text
-            except:
-                showCost = "$?"
             peelEvents.append({
                 "showDate": showDate, 
                 "showTitle": showTitle, 
-                "showTime": showTime, 
                 "showImage": showImage, 
-                "showCost": showCost,
                 "showTickets": showTickets})
         for show in peelEvents:
-            for v in show.values():
-                print(v)
+            new_event = Event(
+                venue = "Orange Peel",
+                title = show["showTitle"],
+                show_date = datetime.strptime(show["showDate"], "%a, %b %d %Y"),
+                tickets = show["showTickets"],
+                image = show["showImage"],
+            )
+            db.session.add(new_event)
+            db.session.commit()
     else:
         print(f"Failed to retrieve page. Status code: {resp.status_code}")
     return peelEvents
@@ -130,10 +130,6 @@ def rabbit():
             except:
                 showDate = "Date/time Not Found"
             try:
-                showTime = dateAndTime[-8:]
-            except:
-                showTime = "Time not found"
-            try:
                 showTitle = show.find("h3", class_="tribe-events-calendar-list__event-title").find("a")['title']
             except:
                 showTitle = "Title not found"
@@ -145,20 +141,21 @@ def rabbit():
                 showTickets = show.find("div", class_="prc-tribe-list-links").find("a")['href']
             except:
                 showTickets = "Tickets Not Found"
-            try:
-                showCost = show.find("div", class_="tribe-events-calendar-list__event-cost").find('span').text
-            except:
-                showCost = "$?"
             rabbitEvents.append({
                 "showDate": showDate, 
                 "showTitle": showTitle, 
-                "showTime": showTime, 
                 "showImage": showImage, 
-                "showCost": showCost,
                 "showTickets": showTickets})
         for show in rabbitEvents:
-            for v in show.values():
-                print(v)
+            new_event = Event(
+                venue = "Rabbit Rabbit",
+                title = show["showTitle"],
+                show_date = datetime.strptime(show["showDate"], "%B %d, %Y"),
+                tickets = show["showTickets"],
+                image = show["showImage"]
+            )
+            db.session.add(new_event)
+            db.session.commit()
     else:
         print(f"Failed to retrieve page. Status code: {resp.status_code}")
     return rabbitEvents
@@ -177,10 +174,10 @@ def cherokee():
         
         for show in showDivs:
             try:
-                showDate = show.find("div", class_="event-date").text   
+                showDay = show.find("div", class_="event-date").text.strip()
+                showDate = showDay + " 2024"
             except:
-                showDate = "Date/time Not Found"
-            showTime = "Time Not shown"
+                showDate = "Jan 1, 1955"
             try:
                 showTitle = show.find("div", class_="event-details").find("h3").text
             except:
@@ -193,17 +190,21 @@ def cherokee():
                 showTickets = show.find("a", class_="event-ticket")['href']
             except:
                 showTickets = "Tickets Not Found"
-            showCost = "$?"
             cherokeeEvents.append({
                 "showDate": showDate, 
                 "showTitle": showTitle, 
-                "showTime": showTime, 
                 "showImage": showImage, 
-                "showCost": showCost,
                 "showTickets": showTickets})
         for show in cherokeeEvents:
-            for v in show.values():
-                print(v)
+            new_event = Event(
+                venue = "Harrah's Cherokee",
+                title = show["showTitle"],
+                show_date = datetime.strptime(show["showDate"], "%b %d, %Y"),
+                tickets = show["showTickets"],
+                image = show["showImage"]
+            )
+            db.session.add(new_event)
+            db.session.commit()
     else:
         print(f"Failed to retrieve page. Status code: {resp.status_code}")
     return cherokeeEvents
@@ -230,7 +231,6 @@ def salvage():
                 showDate = f"{showDay} {showMonth} {showNum} {showYear}"
             except:
                 showDate = "Date/time Not Found"
-            showTime = "Time Not shown"
             try:
                 showTitle = show.find("div", class_="event-list-title").text
             except:
@@ -243,17 +243,21 @@ def salvage():
                 showTickets = show.find("a", class_="event-list-button buy")['href']
             except:
                 showTickets = "Tickets Not Found"
-            showCost = "$?"
             salvageEvents.append({
                 "showDate": showDate, 
                 "showTitle": showTitle, 
-                "showTime": showTime, 
                 "showImage": showImage, 
-                "showCost": showCost,
                 "showTickets": showTickets})
         for show in salvageEvents:
-            for v in show.values():
-                print(v)
+            new_event = Event(
+                venue = "Salvage Station",
+                title = show["showTitle"],
+                show_date = datetime.strptime(show["showDate"], "%a, %b, %d, %Y"),
+                tickets = show["showTickets"],
+                image = show["showImage"]
+            )
+            db.session.add(new_event)
+            db.session.commit()
     else:
         print(f"Failed to retrieve page. Status code: {resp.status_code}")
     return salvageEvents
