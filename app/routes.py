@@ -7,7 +7,7 @@ from datetime import datetime
 
 @app.route('/')
 def home():
-    events = Event.query.all()
+    events = Event.query.order_by(Event.show_date).all()
     return render_template('home.html', events=events)
 
 @app.route('/sort-by-eagle')

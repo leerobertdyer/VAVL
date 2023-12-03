@@ -6,11 +6,20 @@
 {% include './includes/nav.html'%}
 {% block content %}
 <div class="mainDiv" id="mainDiv">
-    <h1>Find all your AVL shows in one place...</h1>
-    <button class="myBtn" id="showBtn">Check 4 More!</button>
     <div class="eventsDiv">
     {% for event in events %}
-        <a class="eventLink" 
+        <a class="eventLink
+        {% if event.venue == 'Grey Eagle' %}
+            eagle-border
+        {% elif event.venue == 'Orange Peel' %}
+            peel-border
+        {% elif event.venue == 'Rabbit Rabbit' %}
+            rabbit-border
+        {% elif event.venue == 'Salvage Station' %}
+            salvage-border
+        {% elif event.venue == 'Harrah\'s Cherokee' %}
+            cherokee-border
+        {% endif %}"  
         href="{{event.tickets}}"
         style="background-image: url('{{ event.image }}');background-size:cover">
             <h2 class="eventVenue">{{event.venue}}</h2>

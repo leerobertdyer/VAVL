@@ -29,47 +29,71 @@ background-color: lightpink;
     flex-wrap: wrap;
     justify-content: center;
     gap: 20px;
+    padding: 40px;
 }
 
 .eventLink {
-    width: 25vw;
-    height: 25vw;
-    padding: 40px;
+    width: 22vw;
+    height: 22vw;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: end;
+    justify-content: space-between;
     border: black solid 2px;
     border-radius: 3px;
     color: antiquewhite;
     gap: 5px;
 }
 
+.eventLink:hover {
+    transition: 2s;
+    transform: scale(125%);
+}
+
+
 a {
     text-decoration: none !important;
 }
 
 .eventVenue, .eventTitle, .eventDate {
-    background-color: rgba(12, 5, 5, 0.8);
-    padding: 10px;
-    border-radius: 10px;
+    background-color: rgba(12, 5, 5, 0.95);
     text-align: center;
     margin: 0;
+    width: 100%;
 }
 
+
 .eventVenue {
-    color: orange;
+    color: white;
 }
 
 .eventTitle {
-    font-size: 2vw;
-    color: rgb(0, 239, 239);
-
+    color: gold;
+    padding: 15px 0;
+    border-top: solid white 1px;
+    border-bottom: solid white 1px;
 }
 
 .eventDate {
     font-weight: 900;
-    font-size: 2.5vw;
 }
 
+.eagle-border {
+    border: double white 5px;
+}
 
+.peel-border {
+    border: double orange 5px;
+}
+
+.rabbit-border {
+    border: pink double 5px;
+}
+
+.salvage-border {
+    border: yellow double 5px;
+}
+
+.cherokee-border {
+    border: red double 5px;
+}
