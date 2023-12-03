@@ -1,0 +1,22 @@
+{% block style %}
+<link rel="stylesheet" href="../../static/styles/nav.css">
+{% endblock %}
+
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="navContainer">
+    <img src="../../static/images/AVLmusic.jpeg" class="navLogo" alt="logo">
+    <div class="navRight">
+        <h1 class='title'>AVL Show Tracker</h1>
+        <div class="navLinks">
+            <a class="sortLink" href='{{ url_for("home") }}'>All</a>
+            <a class="sortLink" href='{{ url_for("eagleSort") }}'>Grey Eagle</a>
+            <a class="sortLink" href='{{ url_for("peelSort") }}'>Orange Peel</a>
+            <a class="sortLink" href='{{ url_for("rabbitSort") }}'>Rabbit Rabbit</a>
+            <a class="sortLink" href='{{ url_for("cherokeeSort") }}'>Harrah's Cherokee</a>
+            <a class="sortLink" href='{{ url_for("salvageSort") }}'>Salvage Station</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -7,7 +7,34 @@ from datetime import datetime
 
 @app.route('/')
 def home():
-    return render_template('home.html')
+    events = Event.query.all()
+    return render_template('home.html', events=events)
+
+@app.route('/sort-by-eagle')
+def eagleSort():
+    events = Event.query.filter_by(venue='Grey Eagle').all()
+    return render_template('home.html', events=events)
+
+@app.route('/sort-by-peel')
+def peelSort():
+    events = Event.query.filter_by(venue='Orange Peel').all()
+    return render_template('home.html', events=events)
+
+@app.route('/sort-by-rabbit')
+def rabbitSort():
+    events = Event.query.filter_by(venue='Rabbit Rabbit').all()
+    return render_template('home.html', events=events)
+
+@app.route('/sort-by-salvage')
+def salvageSort():
+    events = Event.query.filter_by(venue='Salvage Station').all()
+    return render_template('home.html', events=events)
+
+@app.route('/sort-by-cherokee')
+def cherokeeSort():
+    events = Event.query.filter_by(venue='Harrah\'s Cherokee').all()
+    return render_template('home.html', events=events)
+    
 
 @app.route('/eagle')
 def eagle():

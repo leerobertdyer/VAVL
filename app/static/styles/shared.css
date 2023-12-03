@@ -5,39 +5,3 @@ body {
     font-family:monospace;
 }
 
-.mainDiv {
-    background: linear-gradient(lightblue, rgb(1, 91, 99));
-    background-size: cover;
-    background-repeat: no-repeat;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: start;
-    width: 100vw;
-    height: 100vh;
-    gap: 15px;
-}
-
-.myBtn {
-padding: 10px;
-border: white solid 2px;
-border-radius: 10px;
-background-color: lightpink;
-}
-
-.myBtn:hover {
-    border: black solid 2px;
-    background-color: rgb(255, 47, 231);
-}
-
-.eventLink {
-    width: 80%;
-    height: fit-content;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-evenly;
-    background-color: red;
-    border: black solid 2px;
-}

@@ -1,0 +1,54 @@
+.navContainer {
+    display: flex;
+    align-items: end;
+    background-image: url('../images/avlPretty.jpeg');
+    background-size:100vw;
+    background-position-y:center;
+    height: 250px;
+    /* background-color: rgb(49, 3, 49); */
+    color: antiquewhite;
+    padding-bottom: 20px;
+}
+
+.navLogo {
+    height: 75px;
+    width: 75px;
+    border-radius: 50%;
+    padding: 10px;
+    margin-right: auto;
+}
+
+.title {
+    margin-right: 30px;
+    font-size: 3.5vw;
+    font-family: fantasy;
+    background-color: rgba(21, 9, 9, .5);
+    padding: 10px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.navLinks {
+    margin-right: 30px;
+    color: goldenrod;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.sortLink {
+    padding: 10px;
+    border: solid antiquewhite 2px;
+    border-radius: 10px;
+    background-color: black;
+    font-size: 1.5vw;
+}
+
+.sortLink:hover {
+background-color: antiquewhite;
+border: solid goldenrod 2px;
+}
+
+.navLinks > a:visited {
+    color: rgb(145, 49, 235);
+}

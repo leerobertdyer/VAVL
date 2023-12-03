@@ -1,8 +1,23 @@
-{% extends 'base.html' %}
+{% block style %}
+<link rel="stylesheet" href="../static/styles/home.css">
+{% endblock %}
 
+{% extends 'base.html' %}
+{% include './includes/nav.html'%}
 {% block content %}
 <div class="mainDiv" id="mainDiv">
     <h1>Find all your AVL shows in one place...</h1>
-    <button class="myBtn" id="showBtn">Get Shows!</button>
+    <button class="myBtn" id="showBtn">Check 4 More!</button>
+    <div class="eventsDiv">
+    {% for event in events %}
+        <a class="eventLink" 
+        href="{{event.tickets}}"
+        style="background-image: url('{{ event.image }}');background-size:cover">
+            <h2 class="eventVenue">{{event.venue}}</h2>
+            <h3 class="eventTitle">{{event.title}}</h3>
+            <h4 class="eventDate">{{event.show_date.strftime('%B %-d, %Y')}}</h4>
+        </a>
+    {% endfor %}
+</div>
 </div>
 {% endblock %}

@@ -1,0 +1,75 @@
+.mainDiv {
+    /* background: linear-gradient(to right, lightblue, rgb(1, 91, 99)); */
+    background-image: url('../images/avlBackdrop.jpeg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    width: 100vw;
+    height: fit-content;
+    gap: 15px;
+}
+
+.myBtn {
+padding: 10px;
+border: white solid 2px;
+border-radius: 10px;
+background-color: lightpink;
+}
+
+.myBtn:hover {
+    border: black solid 2px;
+    background-color: rgb(255, 47, 231);
+}
+
+.eventsDiv {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.eventLink {
+    width: 25vw;
+    height: 25vw;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: end;
+    border: black solid 2px;
+    border-radius: 3px;
+    color: antiquewhite;
+    gap: 5px;
+}
+
+a {
+    text-decoration: none !important;
+}
+
+.eventVenue, .eventTitle, .eventDate {
+    background-color: rgba(12, 5, 5, 0.8);
+    padding: 10px;
+    border-radius: 10px;
+    text-align: center;
+    margin: 0;
+}
+
+.eventVenue {
+    color: orange;
+}
+
+.eventTitle {
+    font-size: 2vw;
+    color: rgb(0, 239, 239);
+
+}
+
+.eventDate {
+    font-weight: 900;
+    font-size: 2.5vw;
+}
+
+
