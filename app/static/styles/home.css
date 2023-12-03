@@ -43,11 +43,12 @@ background-color: lightpink;
     border-radius: 3px;
     color: antiquewhite;
     gap: 5px;
+    background-color: black;
 }
 
 .eventLink:hover {
     transition: 2s;
-    transform: scale(125%);
+    transform: scale(115%);
 }
 
 
