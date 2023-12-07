@@ -19,17 +19,18 @@
 }
 
 .title {
-    margin-right: 30px;
     font-size: 3.5vw;
     font-family: fantasy;
     background-color: rgba(21, 9, 9, .5);
     padding: 10px;
     border-radius: 10px;
     text-align: center;
+    width: 100%;
+    margin: 0;
 }
 
 .navLinks {
-    margin-right: 30px;
+    margin: 0 30px 0 0;
     color: goldenrod;
     display: flex;
     align-items: center;
@@ -54,4 +55,13 @@
 
 .navLinks > a:visited {
     color: rgb(145, 49, 235);
+}
+
+.navRight {
+    width: 75%;
+    display: flex;
+    justify-content: end;
+    align-items: end;
+    flex-direction: column;
+    margin: 0;
 }

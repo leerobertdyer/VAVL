@@ -53,4 +53,3 @@ const appendData = (eventsByVenue) => {
 
 mainDiv = document.getElementById('mainDiv')
 showBtn = document.getElementById('showBtn');
-showBtn.addEventListener("click", getEvents);
