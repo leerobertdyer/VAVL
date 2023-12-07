@@ -5,35 +5,58 @@ from bs4 import BeautifulSoup
 from .models import Event
 from datetime import datetime
 
+def helper(allEvents):
+    lastDate = allEvents[0].show_date.strftime('%B %-d, %Y')
+    events = []
+    for e in allEvents:
+        if e.show_date != lastDate:
+            events.append({'newDate': e.show_date.strftime('%B %-d, %Y')})
+            lastDate = e.show_date
+        events.append({'venue': e.venue, 'title': e.title, 'tickets': e.tickets, 'image': e.image})
+    return events
+            
+
 @app.route('/')
 def home():
-    events = Event.query.order_by(Event.show_date).all()
-    return render_template('home.html', events=events)
+    e = Event.query.order_by(Event.show_date).all()
+    lastDate = e[0].show_date
+    events = helper(e)
+    return render_template('home.html', events=events, lastDate=lastDate)
 
 @app.route('/sort-by-eagle')
 def eagleSort():
-    events = Event.query.filter_by(venue='Grey Eagle').all()
-    return render_template('home.html', events=events)
+    e = Event.query.filter_by(venue='Grey Eagle').all()
+    lastDate = e[0].show_date
+    events = helper(e)
+    return render_template('home.html', events=events, lastDate=lastDate)
 
 @app.route('/sort-by-peel')
 def peelSort():
-    events = Event.query.filter_by(venue='Orange Peel').all()
-    return render_template('home.html', events=events)
+    e = Event.query.filter_by(venue='Orange Peel').all()
+    lastDate = e[0].show_date
+    events = helper(e)
+    return render_template('home.html', events=events, lastDate=lastDate)
 
 @app.route('/sort-by-rabbit')
 def rabbitSort():
-    events = Event.query.filter_by(venue='Rabbit Rabbit').all()
-    return render_template('home.html', events=events)
+    e = Event.query.filter_by(venue='Rabbit Rabbit').all()
+    lastDate = e[0].show_date
+    events = helper(e)
+    return render_template('home.html', events=events, lastDate=lastDate)
 
 @app.route('/sort-by-salvage')
 def salvageSort():
-    events = Event.query.filter_by(venue='Salvage Station').all()
-    return render_template('home.html', events=events)
+    e = Event.query.filter_by(venue='Salvage Station').all()
+    lastDate = e[0].show_date
+    events = helper(e)
+    return render_template('home.html', events=events, lastDate=lastDate)
 
 @app.route('/sort-by-cherokee')
 def cherokeeSort():
-    events = Event.query.filter_by(venue='Harrah\'s Cherokee').all()
-    return render_template('home.html', events=events)
+    e = Event.query.filter_by(venue='Harrah\'s Cherokee').all()
+    lastDate = e[0].show_date
+    events = helper(e)
+    return render_template('home.html', events=events, lastDate=lastDate)
     
 
 @app.route('/eagle')

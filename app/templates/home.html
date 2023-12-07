@@ -3,30 +3,37 @@
 {% endblock %}
 
 {% extends 'base.html' %}
+
 {% include './includes/nav.html'%}
+
 {% block content %}
 <div class="mainDiv" id="mainDiv">
-    <div class="eventsDiv">
-    {% for event in events %}
-        <a class="eventLink
-        {% if event.venue == 'Grey Eagle' %}
-            eagle-border
-        {% elif event.venue == 'Orange Peel' %}
-            peel-border
-        {% elif event.venue == 'Rabbit Rabbit' %}
-            rabbit-border
-        {% elif event.venue == 'Salvage Station' %}
-            salvage-border
-        {% elif event.venue == 'Harrah\'s Cherokee' %}
-            cherokee-border
-        {% endif %}"  
-        href="{{event.tickets}}"
-        style="background-image: url('{{ event.image }}');background-size:cover">
-            <h2 class="eventVenue">{{event.venue}}</h2>
-            <h3 class="eventTitle">{{event.title}}</h3>
-            <h4 class="eventDate">{{event.show_date.strftime('%B %-d, %Y')}}</h4>
-        </a>
-    {% endfor %}
-</div>
+
+        <div class="eventsDiv">
+        {% for event in events %}
+            {% if event.newDate %}
+                <h1 class="dateHeader">{{event.newDate}}</h1>
+            {% endif %}
+        {% if event.venue %}
+        <div class="blackBorder">
+            <a class="eventLink
+            {% if event.venue == 'Grey Eagle' %}
+                eagle
+            {% elif event.venue == 'Orange Peel' %}
+                peel
+            {% elif event.venue == 'Rabbit Rabbit' %}
+                rabbit
+            {% elif event.venue == 'Salvage Station' %}
+                salvage
+            {% elif event.venue == 'Harrah\'s Cherokee' %}
+                cherokee
+            {% endif %}" href="{{event.tickets}}" style="background-image: url('{{ event.image }}');background-size:cover">
+                <h2 class="eventVenue">{{event.venue}}</h2>
+                <h3 class="eventTitle">{{event.title}}</h3>
+            </a>
+        </div>
+        {% endif %}
+        {% endfor %}
+        </div>
 </div>
 {% endblock %}
