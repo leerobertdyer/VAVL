@@ -1,5 +1,5 @@
 .mainSortDiv {
-    background-color: violet;
+    background-image: url('../images/avlBackdrop.jpeg');
     width: 100vw;
     height: 100vw;
     margin: 0;
@@ -8,15 +8,22 @@
     align-items: center;
 }
 
+.topSortDiv {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
 .sortSelectorDiv {
-    background-color: rgb(6, 89, 19);
+    background-color: rgb(213, 183, 113);
     padding: 40px;
     border-radius: 22px;
     margin-top: 20px;
 }
 
 .selectVenue {
-    margin:0 auto;
+    width: 100%;
     text-align: center;
     font-size: 2.5vw;
 }
@@ -30,7 +37,6 @@
     gap: 20px;
     padding: 20px 0 0 0;
 }
-
 
 li {
     list-style: none;
