@@ -1,0 +1,25 @@
+{% block style %}
+<link rel="stylesheet" href="../static/styles/sort.css">
+{% endblock %}
+
+{% extends 'base.html' %}
+
+{% include './includes/nav.html'%}
+
+{% block content %}
+<div class="mainSortDiv">
+    <div class="sortSelectorDiv">
+        <h1 class="selectVenue">Select Your Venues</h1>
+        <ul class="ulist">
+            {% for v in venues %}
+            <li class="venueList" id="{{ v }}" data-target="{{ v }}">{{v}}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="sortSelectorDiv">
+        <h1 class="selectVenue">Select Your Dates</h1>
+        <input type="date">
+    </div>
+    <button id="submitSort" class="submitSort">Let's Rock</button>
+</div>
+{% endblock %}

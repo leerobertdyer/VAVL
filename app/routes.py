@@ -1,4 +1,4 @@
-from flask import render_template
+from flask import render_template, request
 from .models import Event
 from app import app
 from datetime import datetime
@@ -28,6 +28,27 @@ def helper(allEvents):
 def home():
     e = Event.query.order_by(Event.show_date).all()
     events = helper(e)
+    lastDate = events[0]
+    return render_template('home.html', events=events, lastDate=lastDate)
+
+@app.route('/sort')
+def sort():
+    venues = Event.query.distinct(Event.venue).with_entities(Event.venue).all()
+    venues = [venue[0] for venue in venues]
+    return render_template('sort.html', venues=venues)
+
+@app.route('/sorted')
+def sorted():
+    selectedVenues = request.args.getlist('venue') 
+    startDate = request.args.get('start')
+    endDate = request.args.get('end')
+    query = Event.query.filter(Event.venue.in_(selectedVenues))
+    if startDate:
+        query = query.filter(Event.show_date >= startDate)
+    if endDate:
+        query = query.filter(Event.show_date <= endDate)
+    query = query.order_by(Event.show_date).all() 
+    events = helper(query)
     lastDate = events[0]
     return render_template('home.html', events=events, lastDate=lastDate)
 

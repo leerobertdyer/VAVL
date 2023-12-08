@@ -25,31 +25,41 @@ const getEvents = async () => {
     appendData(allEvents);
 }
 
-const appendData = (eventsByVenue) => {
-    Object.keys(eventsByVenue).forEach(key => {
-        const venue = eventsByVenue[key]
-        for (const e of venue) {
-            const eventLink = document.createElement('a');
-            const eventTitle = document.createElement('h2');
-            const eventDate = document.createElement('h3');
-            const eventTime = document.createElement('h4');
-            const eventCost = document.createElement('h5');
 
-            eventLink.href = e.showTickets
-            eventLink.style.backgroundImage = `url(${e.showImage})`;
+//sort handler
+let sortedVenues = []
+document.addEventListener('DOMContentLoaded', () => {
+    const venueList = document.querySelectorAll('.venueList');
 
-            eventTitle.textContent = e.showTitle;
-            eventDate.textContent = e.showDate;
-            eventTime.textContent = e.showTime;
-            eventCost.textContent = e.showCost;
+    venueList.forEach((list) => {
+        list.addEventListener('click', () => {
+            const targetId = list.getAttribute('data-target');
+            const targetVenue = document.getElementById(targetId);
+            if (targetVenue.classList.contains('selected')){
+                targetVenue.classList.remove('selected')
+                const indexToRemove = sortedVenues.indexOf(targetId);
+                sortedVenues.splice(indexToRemove, 1)
+            } else {
+                targetVenue.classList.add('selected')
+                sortedVenues.push(targetId)
+            }
+        });
+    });
+});
 
-            eventLink.classList.add('eventLink');
-            eventLink.append(eventTitle, eventDate, eventTime, eventCost)
-            mainDiv.append(eventLink)
-        }
-    })
+const submitSort = document.getElementById('submitSort');
+submitSort.addEventListener('click', () => fetchSort(sortedVenues))
+
+const fetchSort = (datesVenues) => {
+    let params = ''
+    for (venue of datesVenues){
+        params += "venue=" + venue.replace(/\s+/g, '+') + "&"
+    }
+    url = `http://127.0.0.1:5000/sorted?${params}`
+    window.location.href = url
 
 }
 
+
 mainDiv = document.getElementById('mainDiv')
-showBtn = document.getElementById('showBtn');
+
