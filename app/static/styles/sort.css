@@ -19,16 +19,16 @@
     margin-top: 20px;
 }
 
-
 .selectTitles {
     width: 100%;
     text-align: center;
     font-size: 2.5vw;
-    background: linear-gradient(to right, antiquewhite, goldenrod);
+    background: linear-gradient(to right, rgba(181, 105, 105, .9), rgba(216, 164, 33, .9));
     padding: 10px;
     margin-top: 40px;
+    border-top: solid 3px black;
+    border-bottom: solid 3px black;
 }
-
 
 .venueList {
     font-size: 2vw;
@@ -53,16 +53,16 @@
 
 .datePicker {
     height: 55px;
-    width: 40%;
+    width: 308px;
 }
 .datePicker:hover {
     cursor: pointer;
+    background-color: bisque;
 }
 .datePicker::placeholder {
     color: black;
     text-align: center;
 }
-
 
 .submitSort {
     padding: 10px;

@@ -1,7 +1,9 @@
 from flask import render_template, request
 from .models import Event
 from app import app
-from datetime import datetime
+from datetime import datetime, timedelta
+from .blueprints.venues import routes
+
 
 def helper(allEvents):
     lastDate = allEvents[0].show_date.date()
@@ -12,20 +14,28 @@ def helper(allEvents):
         lastDate = allEvents[i].show_date.date()
     events = []
     events.append({'newDate': lastDate.strftime('%B %-d, %Y')})
-    x = 0
-    while x <= i:
-        events.append({'venue': allEvents[x].venue, 'title': allEvents[x].title, 'tickets': allEvents[x].tickets, 'image': allEvents[x].image})
-        x += 1
+
     for e in allEvents:
+        print(e)
         if e.show_date.date() > lastDate:
             events.append({'newDate': e.show_date.strftime('%B %-d, %Y')})
             lastDate = e.show_date.date()
-            events.append({'venue': e.venue, 'title': e.title, 'tickets': e.tickets, 'image': e.image})
+        events.append({'venue': e.venue, 'title': e.title, 'tickets': e.tickets, 'image': e.image})
     return events
             
-
 @app.route('/')
 def home():
+    last_entry = Event.query.order_by(Event.created.desc()).first()
+    if last_entry is not None:
+        time_diff = datetime.now() - last_entry.created
+        if time_diff > timedelta(hours=1):
+            print("Scraping data...")
+            routes.eagle()
+            routes.peel()
+            routes.rabbit()
+            routes.cherokee()
+            routes.salvage()
+            print("Scraping completed.")
     e = Event.query.order_by(Event.show_date).all()
     events = helper(e)
     lastDate = events[0]

@@ -6,7 +6,6 @@ from ...models import Event
 from datetime import datetime
 from app import db
 
-
 @venues.route('/eagle')
 def eagle():
     
@@ -121,8 +120,6 @@ def peel():
         print(f"Failed to retrieve page. Status code: {resp.status_code}")
     return peelEvents
 
-
-
 @venues.route('/rabbit')
 def rabbit():
     
@@ -235,7 +232,6 @@ def cherokee():
     else:
         print(f"Failed to retrieve page. Status code: {resp.status_code}")
     return cherokeeEvents
-    
     
 @venues.route('/salvage')
 def salvage():
