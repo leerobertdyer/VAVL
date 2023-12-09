@@ -27,9 +27,9 @@ const getEvents = async () => {
 
 
 //sort handler
-let sortedVenues = []
-let startDate = ''
-let endDate = ''
+let sortedVenues = [];
+let startDate = '';
+let endDate = '';
 document.addEventListener('DOMContentLoaded', () => {
     const venueList = document.querySelectorAll('.venueList');
 
@@ -38,46 +38,39 @@ document.addEventListener('DOMContentLoaded', () => {
             const targetId = list.getAttribute('data-target');
             const targetVenue = document.getElementById(targetId);
             if (targetVenue.classList.contains('selected')){
-                targetVenue.classList.remove('selected')
+                targetVenue.classList.remove('selected');
                 const indexToRemove = sortedVenues.indexOf(targetId);
-                sortedVenues.splice(indexToRemove, 1)
+                sortedVenues.splice(indexToRemove, 1);
             } else {
-                targetVenue.classList.add('selected')
-                sortedVenues.push(targetId)
+                targetVenue.classList.add('selected');
+                sortedVenues.push(targetId);
             }
         });
     });
 });
 
-const startDateSelector = document.getElementById('startDateSelector')
-const endDateSelector = document.getElementById('endDateSelector')
-startDateSelector.addEventListener('change', (event) => {
-    const inputDate = new Date(event.target.value)
-    startDate = inputDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }); 
-})
-
-endDateSelector.addEventListener('change', (event) => {
-    const inputDate = new Date(event.target.value)
-    endDate = inputDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }); 
-})
+const handleDate = (date) => {
+    startDate = date[0];
+    if (date.length === 2) {
+        endDate = date[1];
+    }
+}
 
 const submitSort = document.getElementById('submitSort');
-submitSort.addEventListener('click', () => fetchSort(sortedVenues))
+submitSort.addEventListener('click', () => fetchSort(sortedVenues));
 
 const fetchSort = (datesVenues) => {
-    let params = ''
+    let params = '';
     for (venue of datesVenues){
-        params += "venue=" + venue.replace(/\s+/g, '+') + "&"
+        params += "venue=" + venue.replace(/\s+/g, '+') + "&";
     }
     if (startDate.length > 0){
-        console.log('js start: ', startDate);
-        params += "start=" + startDate + "&"
+        params += "start=" + startDate + "&";
     } if (endDate.length > 0) {
-        console.log('js end: ', endDate);
-        params += "end=" + endDate
+        params += "end=" + endDate;
     }
-    url = `http://127.0.0.1:5000/sorted?${params}`
-    // window.location.href = url
+    url = `http://127.0.0.1:5000/sorted?${params}`;
+    window.location.href = url;
 }
 
 

@@ -8,23 +8,29 @@
 
 {% block content %}
 <div class="mainSortDiv">
-    <div class="sortSelectorDiv">
-        <div class="topSortDiv">
-            <h1 class="selectVenue">Select Your Venues</h1>
-            <ul class="ulist">
+        <h1 class="selectTitles">Select Your Venues:</h1>
+        <div class="venueSortDiv">
                 {% for v in venues %}
-                <li class="venueList" id="{{ v }}" data-target="{{ v }}">{{v}}</li>
+                <button class="venueList" id="{{ v }}" data-target="{{ v }}">{{v}}</button>
                 {% endfor %}
-            </ul>
         </div>
-        <div class="sortSelectorDiv">
-            <h1 class="selectVenue">Select Your Dates</h1>
-            <h2>Start Date:</h2>
-            <input type="date" id="startDateSelector" min="{{ currentDate }}">
-            <h2>End Date:</h2>
-            <input type="date" id="endDateSelector" max="{{ finalDate }}">
-        </div>
-    </div>
+        <h1 class="selectTitles">Select Your Date(s):</h1>
+            <input  type="text" id="startDate" placeholder="Select Date(s)" />
     <button id="submitSort" class="submitSort">Let's Rock</button>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+    flatpickr("#startDate", {
+        mode: "range",
+        altInput: true,
+        altFormat: "F j, Y",
+        dateFormat: "Y-m-d",
+        minDate: "{{ currentDate }}",
+        onChange: (selectedDates, dateStr, instance) => {
+            const formattedRange = selectedDates.map(date => date.toLocaleDateString('en-US',{ month: 'long', day: 'numeric', year: 'numeric'}))
+            handleDate(formattedRange)
+        },
+        altInputClass: 'datePicker'
+    });
+</script>
 {% endblock %}

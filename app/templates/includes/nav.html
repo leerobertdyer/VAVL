@@ -6,11 +6,11 @@
 <div class="navContainer">
     <img src="../../static/images/AVLmusic.jpeg" class="navLogo" alt="logo">
     <div class="navRight">
-        <div class="navLinks">
-            <a class="sortLink allLink" href='{{ url_for("home") }}'>Clear Sort</a>
-            <a class="sortLink allLink" href='{{ url_for("sort") }}'>Sort</a>
-        </div>
-        <h1 class='title'>AVL Show Tracker</h1>
+        
+        <h1 class='title'>AVL Show Tracker<div class="navLinks">
+            <a class="sortLink" href='{{ url_for("home") }}'>Shows</a>
+            <a class="sortLink" href='{{ url_for("sort") }}'>Sort</a>
+        </div></h1>
     </div>
 </div>
 {% endblock %}

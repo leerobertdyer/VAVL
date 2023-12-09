@@ -1,54 +1,44 @@
 .mainSortDiv {
     background-image: url('../images/avlBackdrop.jpeg');
+    background-size: 1500px;
     width: 100vw;
     height: 100vw;
     margin: 0;
     display: flex;
+    flex-wrap: wrap;
     flex-direction: column;
     align-items: center;
 }
 
-.topSortDiv {
+.venueSortDiv {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
-    width: 100%;
-}
-.sortSelectorDiv {
-    background-color: rgb(213, 183, 113);
-    padding: 40px;
-    border-radius: 22px;
+    gap: 15px;
     margin-top: 20px;
 }
 
-.selectVenue {
+
+.selectTitles {
     width: 100%;
     text-align: center;
     font-size: 2.5vw;
+    background: linear-gradient(to right, antiquewhite, goldenrod);
+    padding: 10px;
+    margin-top: 40px;
 }
 
-.ulist {
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-around;
-    gap: 20px;
-    padding: 20px 0 0 0;
-}
-
-li {
-    list-style: none;
-}
 
 .venueList {
-font-size: 3vw;
-background-color: black;
-color: antiquewhite;
-padding: 20px;
-border-radius: 22px;
+    font-size: 2vw;
+    background-color: black;
+    color: antiquewhite;
+    padding: 2vw;
+    border-radius: 12px;
+    border: none;
 }
+
 .venueList:hover {
     cursor: pointer;
     color: black;
@@ -61,15 +51,32 @@ border-radius: 22px;
     border: solid goldenrod 3px;
 }
 
+.datePicker {
+    height: 55px;
+    width: 40%;
+}
+.datePicker:hover {
+    cursor: pointer;
+}
+.datePicker::placeholder {
+    color: black;
+    text-align: center;
+}
+
+
 .submitSort {
     padding: 10px;
     background-color: black;
-    color: goldenrod;
+    color: red;
     margin-top: 30px;
     width: 15vw;
     height: 5vw;
+    border-radius: 12px;
+    border: white solid 2px;
 }
 .submitSort:hover {
     color: black;
-    background-color: goldenrod;
+    background-color: red;
+    cursor: pointer;
+    border: black solid 2px;
 }
