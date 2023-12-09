@@ -1,0 +1,28 @@
+Still need to fix the update functionality.
+Right now it updates if the last database fetch was more than two hours ago and then reloads allllll the data.
+This takes a lot of time. Almost a full minute.
+
+Option 1:
+One way around it would be to only grab data until it finds an event that's in the database then break out....
+This would involve changing the scrape code to check each event against the database....
+
+option 2:
+Another way would be to learn threading and have the data process in the background
+This is probably the real way but will take a good bit of research
+
+option 3:
+And another way is instead of using the created column, I could have the website update at specific times (eg 4am every day) it wouldn't be automatically up to date but would rarely slow the page down for an actual user.
+
+I'm leaning toward option 1 it makes the most sense to me and seems easy enough.
+
+
+Other things to do:
+-   Add Venues:
+        -One Stop
+        -Static Age
+        -Fleetwoods
+        -One World
+        -Different World
+        -Euology (burial)
+        -The Odd
+        
