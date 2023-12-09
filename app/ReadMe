@@ -1,5 +1,5 @@
 Still need to fix the update functionality.
-Right now it updates if the last database fetch was more than two hours ago and then reloads allllll the data.
+Right now it updates if the last database fetch was more than 12 hours ago and then reloads allllll the data.
 This takes a lot of time. Almost a full minute.
 
 Option 1:

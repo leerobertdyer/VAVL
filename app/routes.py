@@ -16,7 +16,6 @@ def helper(allEvents):
     events.append({'newDate': lastDate.strftime('%B %-d, %Y')})
 
     for e in allEvents:
-        print(e)
         if e.show_date.date() > lastDate:
             events.append({'newDate': e.show_date.strftime('%B %-d, %Y')})
             lastDate = e.show_date.date()
@@ -28,14 +27,14 @@ def home():
     last_entry = Event.query.order_by(Event.created.desc()).first()
     if last_entry is not None:
         time_diff = datetime.now() - last_entry.created
-        if time_diff > timedelta(hours=1):
-            print("Scraping data...")
+        if time_diff > timedelta(hours=12):
+            print("Scraping data...", datetime.time().now())
             routes.eagle()
             routes.peel()
             routes.rabbit()
             routes.cherokee()
             routes.salvage()
-            print("Scraping completed.")
+            print("Scraping completed.", datetime.time())
     e = Event.query.order_by(Event.show_date).all()
     events = helper(e)
     lastDate = events[0]
@@ -44,7 +43,6 @@ def home():
 @app.route('/sort')
 def sort():
     currentDate = datetime.now().date()
-    print(currentDate)
     venues = Event.query.distinct(Event.venue).with_entities(Event.venue).all()
     venues = [venue[0] for venue in venues]
     finalDate = Event.query.filter(Event.show_date >= currentDate).order_by(Event.show_date.desc()).first()
@@ -57,12 +55,10 @@ def sorted():
     endDate = request.args.get('end')
     query = Event.query
     if selectedVenues:
-        query.filter(Event.venue.in_(selectedVenues))
+        query = query.filter(Event.venue.in_(selectedVenues))
     if startDate:
-        print('start Date: ', startDate)
         query = query.filter(Event.show_date >= startDate)
     if endDate:
-        print('end Date: ', endDate)
         query = query.filter(Event.show_date <= endDate)
     query = query.order_by(Event.show_date).all() 
     events = helper(query)
