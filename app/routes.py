@@ -28,7 +28,7 @@ def home():
     if last_entry is not None:
         time_diff = datetime.now() - last_entry.created
         if time_diff > timedelta(hours=12):
-            print("Scraping data...", datetime.time().now())
+            print("Scraping data...", datetime.now())
             routes.eagle()
             routes.peel()
             routes.rabbit()
