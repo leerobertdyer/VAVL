@@ -25,16 +25,17 @@ def helper(allEvents):
 @app.route('/')
 def home():
     last_entry = Event.query.order_by(Event.created.desc()).first()
+    print('last entry: ', last_entry)
     if last_entry is not None:
         time_diff = datetime.now() - last_entry.created
-        if time_diff > timedelta(hours=12):
+        if time_diff:
             print("Scraping data...", datetime.now())
             routes.eagle()
             routes.peel()
             routes.rabbit()
             routes.cherokee()
             routes.salvage()
-            print("Scraping completed.", datetime.time())
+            print("Scraping completed.", datetime.now().time())
     e = Event.query.order_by(Event.show_date).all()
     events = helper(e)
     lastDate = events[0]

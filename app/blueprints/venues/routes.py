@@ -61,9 +61,9 @@ def eagle():
                     )
                     db.session.add(new_event)
                     db.session.commit()
-        else:
-            print(f"Failed to retrieve page. Status code: {resp.status_code}")
-        return eagleEvents
+    else:
+        print(f"Failed to retrieve eagle Page. Status code: {resp.status_code}")
+    return eagleEvents
 
 @venues.route('/peel')
 def peel():
@@ -118,7 +118,7 @@ def peel():
                     db.session.add(new_event)
                     db.session.commit()
     else:
-        print(f"Failed to retrieve page. Status code: {resp.status_code}")
+        print(f"Failed to retrieve peel Page. Status code: {resp.status_code}")
     return peelEvents
 
 @venues.route('/rabbit')
@@ -135,11 +135,25 @@ def rabbit():
         showDivs = soup.find_all("div", class_="tribe-events-calendar-list__event-row")
         for show in showDivs:
             try:
+                currentYear = datetime.now().year
+                # print('wtf wtf wtf wtf1: ', currentYear)
                 dateAndTime = show.find("span", class_="tribe-event-date-start").text 
-                showDateStr = dateAndTime[:-9].strip()
-                showDate = datetime.strptime(showDateStr, "%B %d, %Y")
-            except:
-                showDate = "Date/time Not Found"
+                # print('wtf wtf wtf wtf2: ', dateAndTime)
+                showDateStrData = dateAndTime[:-9].strip()
+                # print('wtf wtf wtf wtf3: ', showDateStrData)
+                showDateStr = showDateStrData + " " + str(currentYear)
+                # print('rabbit rabbit date: ', showDateStr)
+                try:
+                    showDate = datetime.strptime(showDateStr, "%B %d %Y")
+                except ValueError:
+                    try:
+                        showDate = datetime.strptime(showDateStr, "%b %d %Y" )
+                    except ValueError:
+                        showDate = "Date/time Not Found"
+
+            except Exception as e:
+                print(f"An error occurred: {e}")
+                # showDate = datetime.now()
             try:
                 showTitle = show.find("h3", class_="tribe-events-calendar-list__event-title").find("a")['title']
             except:
@@ -169,7 +183,7 @@ def rabbit():
                 db.session.add(new_event)
                 db.session.commit()
     else:
-        print(f"Failed to retrieve page. Status code: {resp.status_code}")
+        print(f"Failed to retrieve Rabbit Page. Status code: {resp.status_code}")
     return rabbitEvents
 
 @venues.route('/cherokee')
@@ -187,15 +201,15 @@ def cherokee():
             try:
                 showDay = show.find("div", class_="event-date").text.strip()
                 if len(showDay) < 5:
-                    print('Too Short!')
+                    # print('Too Short!')
                     alternateDate = show.find("div", class_="event-subtitle").text.strip()
-                    print('alt date: ', alternateDate)
+                    # print('alt date: ', alternateDate)
                     for char in alternateDate:
                         if char.isdigit():
                             showDay += " " + char
                             break
                 showDate = showDay + " 2024"
-                print('final showDate: ', showDate)       
+                # print('final showDate: ', showDate)       
             except:
                 showDate = "Date Not Found"
             try:
@@ -227,7 +241,7 @@ def cherokee():
                 db.session.add(new_event)
                 db.session.commit()
     else:
-        print(f"Failed to retrieve page. Status code: {resp.status_code}")
+        print(f"Failed to retrieve cherokee page. Status code: {resp.status_code}")
     return cherokeeEvents
     
 @venues.route('/salvage')
@@ -281,7 +295,7 @@ def salvage():
                 db.session.add(new_event)
                 db.session.commit()
     else:
-        print(f"Failed to retrieve page. Status code: {resp.status_code}")
+        print(f"Failed to retrieve salvage page. Status code: {resp.status_code}")
     return salvageEvents
     
     
