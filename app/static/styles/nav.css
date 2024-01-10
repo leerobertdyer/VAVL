@@ -2,12 +2,11 @@
     display: flex;
     align-items: end;
     background-image: url('../images/avlPretty.jpeg');
-    background-size:100vw;
-    background-position-y:center;
+    background-size: 100vw;
+    background-position-y: center;
     height: 250px;
     /* background-color: rgb(49, 3, 49); */
     color: antiquewhite;
-    padding-bottom: 20px;
 }
 
 .navLogo {
@@ -21,41 +20,44 @@
 .navRight {
     width: 75%;
     display: flex;
+    gap: 5px;
     justify-content: end;
-    align-items: end;
-    flex-direction: column;
-    margin: 0;
+    background-color: rgba(21, 9, 9, .5);
+    padding: 10px;
+    border-radius: 10px;
 }
 
 .title {
     font-size: 3.5vw;
     font-family: fantasy;
-    background-color: rgba(21, 9, 9, .5);
-    padding: 10px;
-    border-radius: 10px;
     text-align: center;
-    width: 100%;
     margin: 0;
 }
 
 .sortLink {
+    background-color: antiquewhite;
     padding: 10px;
-    border: solid antiquewhite 2px;
+    border: solid black 2px;
     border-radius: 1px;
-    background-color: black;
     font-size: 1.5vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
 }
 
-.sortLink:hover, .sortLink::selection {
-    background-color: antiquewhite;
-    border: solid goldenrod 2px;
+.sortLink:hover,
+.sortLink::selection {
+    background-color: goldenrod;
+    border: solid skyblue 2px;
 }
 
 .navLinks {
-    color: goldenrod;
-    display: inline;
-    float: right;
+    display: flex;
+    justify-content: end;
+    width: fit-content;
 }
-.navLinks > a:visited {
+
+.navLinks>a:visited {
     color: rgb(145, 49, 235);
 }

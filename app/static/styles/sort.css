@@ -2,28 +2,43 @@
     background-image: url('../images/avlBackdrop.jpeg');
     background-size: 1500px;
     width: 100vw;
-    height: 100vw;
+    height: 100vh;
     margin: 0;
     display: flex;
-    flex-wrap: wrap;
     flex-direction: column;
     align-items: center;
 }
 
 .venueSortDiv {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     justify-content: space-around;
     align-items: center;
-    gap: 15px;
+    width: 100%;
+    gap: 5px;
     margin-top: 20px;
 }
 
-.selectTitles {
+.eachBox {
     width: 100%;
+    background-color: navajowhite;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    border-top: black solid 1px;
+    border-bottom: black solid 1px;
+}
+.eachBox:hover {
+    cursor: pointer;
+}
+
+.selectTitles {
+    width: 100vw;
     text-align: center;
     font-size: 2.5vw;
-    background: linear-gradient(to right, rgba(181, 105, 105, .9), rgba(216, 164, 33, .9));
+    background: linear-gradient(to right, rgb(105, 180, 181), rgb(255, 117, 179));
     padding: 10px;
     margin-top: 40px;
     border-top: solid 3px black;
@@ -54,6 +69,8 @@
 .datePicker {
     height: 55px;
     width: 308px;
+    border: solid black 1px;
+    border-radius: 5px;
 }
 .datePicker:hover {
     cursor: pointer;
@@ -65,12 +82,11 @@
 }
 
 .submitSort {
-    padding: 10px;
     background-color: black;
-    color: red;
+    color: hotpink;
     margin-top: 30px;
-    width: 15vw;
-    height: 5vw;
+    height: 40px;
+    width: 120px;
     border-radius: 12px;
     border: white solid 2px;
 }

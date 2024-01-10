@@ -11,12 +11,15 @@
         <h1 class="selectTitles">Select Your Venues:</h1>
         <div class="venueSortDiv">
                 {% for v in venues %}
-                <button class="venueList" id="{{ v }}" data-target="{{ v }}">{{v}}</button>
+                <label  class="eachBox" for="{{ v }}">
+                    <input type="checkbox" class="venueList" id="{{ v }}" data-target="{{ v }}"/>
+                    {{ v }}
+                </label>
                 {% endfor %}
         </div>
         <h1 class="selectTitles">Any specific dates?</h1>
             <input  type="text" id="startDate" placeholder="Select Date(s)" />
-    <button id="submitSort" class="submitSort">Let's Rock</button>
+    <button id="submitSort" class="submitSort">Get Shows</button>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
