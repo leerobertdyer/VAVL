@@ -33,11 +33,14 @@ def eagle():
                     showDate = "Date Not Found"
                 try:
                     showTitle = child.find(id="eventTitle").find('h2').text
+                    print(f'Scraping {showTitle} at grey eagle')
                 except:
                     showTitle = "Title not found"
                     
                 existing_event = Event.query.filter_by(title=showTitle, show_date=showDate).first()
-                
+                if existing_event:
+                    print(f'{showTitle} found in DB, breaking scrape')
+                    break
                 if existing_event is None:
                     try:
                         showImage = child.find("img", class_="eventListImage")['src'] 
@@ -90,10 +93,14 @@ def peel():
                     showDate = "Date Not Found"
                 try:
                     showTitle = child.find(id="eventTitle").find('h2').text.strip()
+                    print(f'Scraping {showTitle} at Peel')
                 except:
                     showTitle = "Title not found"
                 
                 existing_event = Event.query.filter_by(title=showTitle, show_date=showDate).first()
+                if existing_event:
+                    print(f'{showTitle} found in db, breaking loop')
+                    break
                 if existing_event is None:
                     try:
                         showImage = child.find("img", class_="eventListImage")['src'] 
@@ -156,9 +163,13 @@ def rabbit():
                 # showDate = datetime.now()
             try:
                 showTitle = show.find("h3", class_="tribe-events-calendar-list__event-title").find("a")['title']
+                print(f'{showTitle} at Rabbit')
             except:
                 showTitle = "Title not found"
             existing_event = Event.query.filter_by(title=showTitle, show_date=showDate).first()
+            if existing_event:
+                print(f'{showTitle} already in db, breaking loop')
+                break
             if existing_event is None:
                 try:
                     showImage = show.find("img", class_="tribe-events-calendar-list__event-featured-image")['src'] 
@@ -214,9 +225,13 @@ def cherokee():
                 showDate = "Date Not Found"
             try:
                 showTitle = show.find("div", class_="event-details").find("h3").text
+                print(f'scraping {showTitle} at Cherokee')
             except:
                 showTitle = "Title not found"
             existing_event = Event.query.filter_by(title=showTitle, show_date=showDate).first()
+            if existing_event:
+                print(f'{showTitle} already in db: breaking loop')
+                break
             if existing_event is None:
                 try:
                     showImage = show.find("div", class_="image-wrapper").find("img")['src'] 
@@ -268,9 +283,13 @@ def salvage():
                 showDate = "Date/time Not Found"
             try:
                 showTitle = show.find("div", class_="event-list-title").text.strip()
+                print(f'Scraping {showTitle} from salvage')
             except:
                 showTitle = "Title not found"
             existing_event = Event.query.filter_by(title=showTitle, show_date=showDate).first()
+            if existing_event:
+                print(f'{showTitle} already in db: breaking loop')
+                break
             if existing_event is None:
                 try:
                     showImage = show.find("a", class_="event-list-image")["style"][23:-3]

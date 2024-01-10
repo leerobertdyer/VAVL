@@ -12,10 +12,13 @@ def helper(allEvents):
     while lastDate < today:
         i += 1
         lastDate = allEvents[i].show_date.date()
+    # print('LAST DATE: ', lastDate)
     events = []
     events.append({'newDate': lastDate.strftime('%B %-d, %Y')})
 
     for e in allEvents:
+        if e.show_date.date() < lastDate:
+            continue
         if e.show_date.date() > lastDate:
             events.append({'newDate': e.show_date.strftime('%B %-d, %Y')})
             lastDate = e.show_date.date()
@@ -23,12 +26,15 @@ def helper(allEvents):
     return events
             
 @app.route('/')
+@app.route('/home')
 def home():
     last_entry = Event.query.order_by(Event.created.desc()).first()
-    print('last entry: ', last_entry)
     if last_entry is not None:
         time_diff = datetime.now() - last_entry.created
-        if time_diff:
+        twentyFourHours = 24 * 60 * 60
+        if time_diff.total_seconds() > twentyFourHours:
+            # print('LAST ENTRY: ', last_entry)
+            # print('TIME DIFFERENCE: ', time_diff)
             print("Scraping data...", datetime.now())
             routes.eagle()
             routes.peel()

@@ -60,12 +60,17 @@ background-color: lightpink;
 .blackBorder {
     border: solid black 3px;
     border-radius: 3px;
+    transition: 2s;
+}
+.blackBorder:hover {
+    transition: 10s;
+    transform: scale(110%);
 }
 
 .eventLink {
     flex-shrink: 1;
-    width: 22vw;
-    height: 22vw;
+    width: 82vw;
+    height: 37vw;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -75,11 +80,6 @@ background-color: lightpink;
     color: antiquewhite;
     gap: 5px;
     background-color: black;
-}
-
-.blackBorder:hover {
-    transition: 2s;
-    transform: scale(115%);
 }
 
 
@@ -108,24 +108,41 @@ a {
 
 .eventDate {
     font-weight: 900;
+
 }
 
 .eagle {
-    border: solid white 5px;
+    border: solid lightgray 5px;
+}
+
+.eagle > h2 {
+    color: lightgray;
 }
 
 .peel {
     border: solid orange 5px;
 }
+.peel > h2 {
+    color: orange;
+}
 
 .rabbit {
     border: pink solid 5px;
 }
+.rabbit > h2 {
+    color: pink;
+}
 
 .salvage {
-    border: yellow solid 5px;
+    border: olivedrab solid 5px;
+}
+.salvage > h2 {
+    color: olivedrab;
 }
 
 .cherokee {
-    border: red solid 5px;
+    border: tomato solid 5px;
+}
+.cherokee > h2 {
+    color: tomato;
 }
