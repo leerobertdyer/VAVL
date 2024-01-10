@@ -68,6 +68,7 @@ background-color: lightpink;
 }
 
 .eventLink {
+    overflow: hidden;
     flex-shrink: 1;
     width: 82vw;
     height: 37vw;
@@ -146,3 +147,4 @@ a {
 .cherokee > h2 {
     color: tomato;
 }
+

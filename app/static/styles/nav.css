@@ -21,9 +21,9 @@
     width: 75%;
     display: flex;
     gap: 5px;
-    justify-content: end;
+    justify-content: space-between;
     background-color: rgba(21, 9, 9, .5);
-    padding: 10px;
+    padding: 10px 20px 10px 20px;
     border-radius: 10px;
 }
 
@@ -39,11 +39,11 @@
     padding: 10px;
     border: solid black 2px;
     border-radius: 1px;
-    font-size: 1.5vw;
+    font-size: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 80px;
+    width: 120px;
 }
 
 .sortLink:hover,
@@ -60,4 +60,23 @@
 
 .navLinks>a:visited {
     color: rgb(145, 49, 235);
+}
+
+@media (max-width: 400px) {
+.navRight {
+    flex-direction: column;
+    align-items: center;
+}
+
+.sortLink {
+    font-size: 10px;
+    width: 85px;
+}
+.sortLink > a {
+    text-decoration: none;
+}
+.navLogo {
+    width: 30vw;
+    height: 30vw;
+}
 }

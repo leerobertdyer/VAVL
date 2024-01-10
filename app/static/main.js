@@ -1,30 +1,4 @@
-const getEvents = async () => {
-    allEvents = {};
-
-    const eagleResp = await fetch('http://127.0.0.1:5000/eagle');
-    const eagleData = await eagleResp.json();
-    allEvents.eagle = eagleData;
-
-    const peelResp = await fetch('http://127.0.0.1:5000/peel');
-    const peelData = await peelResp.json();
-    allEvents.peel = peelData;
-
-    const salvageResp = await fetch('http://127.0.0.1:5000/salvage');
-    const salvageData = await salvageResp.json();
-    allEvents.salvage = salvageData;
-
-    const rabbitResp = await fetch('http://127.0.0.1:5000/rabbit');
-    const rabbitData = await rabbitResp.json();
-    allEvents.rabbit = rabbitData;
-
-    const cherokeeResp = await fetch('http://127.0.0.1:5000/cherokee');
-    const cherokeeData = await cherokeeResp.json();
-    allEvents.cherokee = cherokeeData;
-
-    console.log(allEvents);
-    appendData(allEvents);
-}
-
+homeURL = window.location.href
 
 //sort handler
 let sortedVenues = [];
@@ -69,7 +43,7 @@ const fetchSort = (datesVenues) => {
     } if (endDate.length > 0) {
         params += "end=" + endDate;
     }
-    url = `http://127.0.0.1:5000/sorted?${params}`;
+    url = `${homeURL}ed?${params}`;
     window.location.href = url;
 }
 
