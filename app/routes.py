@@ -77,5 +77,5 @@ def update():
     e = Event.query.order_by(Event.show_date).all()
     events = helper(e)
     lastDate = events[0]
-    return render_template('home.html', events=events, lastDate=lastDate)
+    return "Database Updated"
     
