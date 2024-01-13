@@ -74,6 +74,7 @@ def update():
             routes.cherokee()
             routes.salvage()
             routes.eulogy()
+            routes.fleetwoods()
             print("Scraping completed.", datetime.now().time())
     e = Event.query.order_by(Event.show_date).all()
     events = helper(e)
