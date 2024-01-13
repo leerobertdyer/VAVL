@@ -17,9 +17,7 @@ import chromedriver_autoinstaller
 chromedriver_autoinstaller.install()
 chrome_driver_path = chromedriver_autoinstaller.install()
 
-
 headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36'}
-
 
 @venues.route('/eagle')
 def eagle():
@@ -446,9 +444,9 @@ def fleetwoods():
         except:
             showTitle = "Title not found"
         existing_event = Event.query.filter_by(title=showTitle, show_date=showDate).first()
-        # if existing_event:
-        #     print(f'{showTitle} already in db: breaking loop')
-            # break
+        if existing_event:
+            print(f'{showTitle} already in db: breaking loop')
+            break
         if existing_event is None:
             try:
                 showImage = show.find('img')["style"][22:-2]
