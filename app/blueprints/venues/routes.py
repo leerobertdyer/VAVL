@@ -5,12 +5,26 @@ import requests
 from ...models import Event
 from datetime import datetime
 from app import db
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.chrome.options import Options as ChromeOptions
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+import chromedriver_autoinstaller
+
+chromedriver_autoinstaller.install()
+chrome_driver_path = chromedriver_autoinstaller.install()
+
+
+headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36'}
+
 
 @venues.route('/eagle')
 def eagle():
     
     url = "https://www.thegreyeagle.com/calendar/"
-    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36'}
     resp = requests.get(url, headers=headers)
     soup = BeautifulSoup(resp.content, "html.parser")
     
@@ -71,7 +85,6 @@ def eagle():
 @venues.route('/peel')
 def peel():
     url = "https://theorangepeel.net/events/?view=list"
-    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36'}
     resp = requests.get(url, headers=headers)
     soup = BeautifulSoup(resp.content, "html.parser")
     
@@ -129,10 +142,8 @@ def peel():
     return peelEvents
 
 @venues.route('/rabbit')
-def rabbit():
-    
+def rabbit():    
     url = "https://rabbitrabbitavl.com/calendar/"
-    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36'}
     resp = requests.get(url, headers=headers)
     soup = BeautifulSoup(resp.content, "html.parser")
     
@@ -200,7 +211,6 @@ def rabbit():
 @venues.route('/cherokee')
 def cherokee():
     url = 'https://www.harrahscherokeecenterasheville.com/events-tickets/'
-    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36'}
     resp = requests.get(url, headers=headers)
     soup = BeautifulSoup(resp.content, 'html.parser')
     
@@ -212,15 +222,12 @@ def cherokee():
             try:
                 showDay = show.find("div", class_="event-date").text.strip()
                 if len(showDay) < 5:
-                    # print('Too Short!')
                     alternateDate = show.find("div", class_="event-subtitle").text.strip()
-                    # print('alt date: ', alternateDate)
                     for char in alternateDate:
                         if char.isdigit():
                             showDay += " " + char
                             break
-                showDate = showDay + " 2024"
-                # print('final showDate: ', showDate)       
+                showDate = showDay + " 2024"    
             except:
                 showDate = "Date Not Found"
             try:
@@ -262,7 +269,6 @@ def cherokee():
 @venues.route('/salvage')
 def salvage():
     url = 'https://salvagestation.com/events/'
-    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36'}
     resp = requests.get(url, headers=headers)
     soup = BeautifulSoup(resp.content, 'html.parser')
     
@@ -270,7 +276,6 @@ def salvage():
     
     if resp.status_code == 200:
         showDivs = soup.find_all("div", class_="event-list-wrapper")
-        
         for show in showDivs:
             try:
                 showDay = show.find("div", class_="event-list-day").text.strip()
@@ -316,5 +321,76 @@ def salvage():
     else:
         print(f"Failed to retrieve salvage page. Status code: {resp.status_code}")
     return salvageEvents
+
+
+@venues.route('/eulogy')
+def eulogy():
+    url = 'https://burialbeer.com/pages/eulogy'
+    
+    chrome_options = ChromeOptions()
+    chrome_options.add_argument('--headless') 
+    driver = webdriver.Chrome(service=ChromeService(executable_path=chrome_driver_path), options=chrome_options)
+    driver.get(url)
+    
+    wait = WebDriverWait(driver, 10)
+    wait.until(EC.visibility_of_element_located((By.CLASS_NAME, 'dice_events')))
+    if "404" in driver.title:
+        driver.quit()
+        return "Euology not found", 404
+    page_source = driver.page_source
+    driver.quit()
+    soup = BeautifulSoup(page_source, 'html.parser')
+    
+    eulogyEvents = []
+    
+    showDivs = soup.find_all('article', class_='sc-iHbSHJ fCPdMs')
+    print(showDivs)
+    d =1
+    for show in showDivs:
+        # print('Show: ', d)
+        d+=1
+        try:
+            showDateData = show.find("time", class_="sc-klVQfs").text[:11].strip()
+            if showDateData[-1] == "―":
+                showDateData = showDateData[:-2]
+            showDateData += " 2024"
+            print('HERE: ', showDateData)
+            showDate = datetime.strptime(showDateData, "%a %d %b %Y") 
+        except:
+            showDate = "Date/time Not Found"
+        try:
+            showTitle = show.find("a", class_="dice_event-title").text.strip()
+            print(f'Scraping {showTitle} from Eulogy')
+        except:
+            showTitle = "Title not found"
+        existing_event = Event.query.filter_by(title=showTitle, show_date=showDate).first()
+        # if existing_event:
+        #     print(f'{showTitle} already in db: breaking loop')
+        #     break
+        if existing_event is None:
+            try:
+                showImageElement = show.find("img", class_="sc-fxwrCY gPoyuC")
+                showImage = showImageElement.get('src')
+            except:
+                showImage = "app/static/sad.jpg"
+            try:
+                showTickets = show.find("a", class_="sc-kdBSHD dougVq dice_book-now")['href']
+            except:
+                showTickets = "Tickets Not Found"
+            eulogyEvents.append({
+                "showDate": showDate, 
+                "showTitle": showTitle, 
+                "showImage": showImage, 
+                "showTickets": showTickets})
+            new_event = Event(
+                venue = "Eulogy",
+                title = showTitle,
+                show_date = showDate,
+                tickets = showTickets,
+                image = showImage
+            )
+            db.session.add(new_event)
+            db.session.commit()
+    return eulogyEvents
     
     
