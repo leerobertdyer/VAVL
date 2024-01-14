@@ -14,14 +14,13 @@ migrate = Migrate(app, db)
 render = os.environ.get('RENDER') == 'true'
 
 with sync_playwright() as p:
-    browser = p.chromium.launch(headless=True)  # Launch a headless Chromium browser
-    driver = browser.new_page()  # Create a new page
+    browser = p.chromium.launch(headless=True, channel="chrome") 
+    driver = browser.new_page()  
 
 if render:
     indexURL = 'https://vavl.onrender.com'
 else:
     indexURL = 'http://127.0.0.1:5000'
-    
 
 from .blueprints.venues import venues
 app.register_blueprint(venues)
