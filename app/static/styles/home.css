@@ -2,8 +2,8 @@
 
 .mainDiv {
     /* background: linear-gradient(to right, lightblue, rgb(1, 91, 99)); */
-    background-image: url('../images/avlBackdrop.jpeg');
-    background-size: 2000px;
+    background-image: url('../images/brick1.jpeg');
+    background-size: contain;
     background-repeat: repeat;
     display: flex;
     flex-direction: column;
@@ -37,9 +37,9 @@ background-color: lightpink;
 
 .dateHeader {
     color: black;
-    background-color: navajowhite;
+    background-color: white;
     border: solid black 3px;
-    width: 100%;
+    width: 50%;
     padding: 10px 0;
     text-align: center;
     border-radius: 12px;
