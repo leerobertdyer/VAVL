@@ -14,7 +14,7 @@ migrate = Migrate(app, db)
 render = os.environ.get('RENDER') == 'true'
 
 with sync_playwright() as p:
-    browser = p.chromium.launch(executable_path='/path/to/chromium/executable', headless=True)
+    browser = p.chromium.launch(executable_path = '/opt/render/project/.render/chrome/opt/google/chrome/chrome', headless=True)
     driver = browser.new_page()  
 
 if render:
