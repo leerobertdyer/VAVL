@@ -1,5 +1,9 @@
 FROM python:3.9.6-slim
 
+RUN apt-get update && apt-get install -y chromium
+
+ENV CHROMIUM_EXECUTABLE_PATH /usr/bin/chromium-browser
+
 WORKDIR /usr/src/app
 
 COPY . .
