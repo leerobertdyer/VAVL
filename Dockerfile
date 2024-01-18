@@ -8,6 +8,14 @@ WORKDIR /usr/src/app
 COPY . .
 
 RUN pip install --no-cache-dir -r requirements.txt
+
+RUN mkdir -p /usr/lib/playwright
+RUN wget -P /usr/lib/playwright https://playwright.azureedge.net/builds/cli/1.21.0/chromium-linux.zip
+RUN unzip /usr/lib/playwright/chromium-linux.zip -d /usr/lib/playwright
+RUN rm /usr/lib/playwright/chromium-linux.zip
+
+ENV PLAYWRIGHT_BROWSERS_PATH /usr/lib/playwright
+
 RUN apt-get update && apt-get install -y \
     libglib2.0-0 \
     libnss3 \
@@ -31,10 +39,9 @@ RUN apt-get update && apt-get install -y \
     libcairo2 \
     libasound2
 
+RUN pip install playwright==1.21.1
 RUN playwright install
 
 EXPOSE 80
 
 CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:80", "app:app"]
-
-
