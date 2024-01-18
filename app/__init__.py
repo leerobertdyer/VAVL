@@ -14,11 +14,11 @@ migrate = Migrate(app, db)
 render = os.environ.get('RENDER') == 'true' 
 chromium_executable_path = os.environ.get('CHROMIUM_EXECUTABLE_PATH', None)
 
-if True:
+if render:
     indexURL = 'https://vavl.onrender.com'
-    with sync_playwright() as p:
-        browser = p.chromium.launch(executable_path = '/usr/bin/chromium', headless=True)
-        driver = browser.new_page() 
+    # with sync_playwright() as p:
+    #     browser = p.chromium.launch(executable_path = chromium_executable_path, headless=True)
+    #     driver = browser.new_page() 
 else:
     indexURL = 'http://127.0.0.1:5000'
     with sync_playwright() as p:
