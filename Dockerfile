@@ -41,6 +41,8 @@ RUN apt-get update && apt-get install -y \
 
 RUN pip install playwright==1.21.1
 RUN playwright install
+ENV PLAYWRIGHT_BROWSERS_PATH=/usr/lib/playwright
+
 
 EXPOSE 80
 
