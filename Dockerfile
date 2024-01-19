@@ -1,14 +1,11 @@
-# Use a base image with Python
 FROM python:3.9.6-slim
 
 RUN apt-get update && apt-get install -y chromium
 
 ENV PLAYWRIGHT_BROWSERS_PATH=/usr/lib/playwright
-ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD 1
+# ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD 1
 
-RUN pip install playwright-chromium@1.11.1
-
-RUN pip install playwright==1.21.1
+RUN pip install playwright==1.40.0
 
 RUN playwright install
 
