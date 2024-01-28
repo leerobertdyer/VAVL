@@ -83,12 +83,16 @@ def peel():
         for child in mainDiv:
             if child.name == "span":
                 showYear = child.span.text[-4::].strip()
+                print("SHOW YEAR: ", showYear)
             elif child.name == "div":
                 try:
+                    print('made it here')
                     showDay = child.find(id="eventDate").text.strip() 
                     showDateStr = showDay + " " + showYear
-                    if showDateStr[5:9].upper() == "SEPT":
+                    if showDateStr[5:9].upper() == "SEPT" or showDateStr[5:9].upper() == "MARCH" or showDateStr[5:9].upper() == "JUNE" or showDateStr[5:9].upper() == "JULY":
                         showDateStr = showDateStr[0:8] + showDateStr[9::]
+                        print('date format off...')
+                        print(showDateStr)
                     showDate = datetime.strptime(showDateStr, "%a, %b %d %Y")
                 except:
                     showDate = "Date Not Found"
@@ -377,90 +381,90 @@ def salvage():
 
 # @venues.route('/fleetwoods')
 # def fleetwoods():
-#     url = 'https://fleetwoodschapel.com/calendar-of-events/'
-#     with sync_playwright() as p:
-#         browser = p.chromium.launch(headless=True)  
-#         page = browser.new_page() 
+    url = 'https://fleetwoodschapel.com/calendar-of-events/'
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)  
+        page = browser.new_page() 
 
-#         page.goto(url)
-#         page.wait_for_selector(".section-inner")  
+        page.goto(url)
+        page.wait_for_selector(".section-inner")  
 
-#         if "404" in page.title():
-#             browser.close()
-#             return "Euology not found", 404
+        if "404" in page.title():
+            browser.close()
+            return "Euology not found", 404
 
-#         page_source = page.content()  
-#         soup = BeautifulSoup(page_source, 'html.parser')
+        page_source = page.content()  
+        soup = BeautifulSoup(page_source, 'html.parser')
     
-#     fleetwoodsEvents = []
+    fleetwoodsEvents = []
     
-#     divOne = soup.find('div', class_="content clear fleft")
-#     divTwo = divOne.find('article', id="post-390")
-#     divThree = divTwo.find('div', class_="post-content clear")
-#     divFour = divThree.find('div', id="showslinger-widget-container-47077")
-#     iframe_src = divFour.find('iframe')["src"]
+    divOne = soup.find('div', class_="content clear fleft")
+    divTwo = divOne.find('article', id="post-390")
+    divThree = divTwo.find('div', class_="post-content clear")
+    divFour = divThree.find('div', id="showslinger-widget-container-47077")
+    iframe_src = divFour.find('iframe')["src"]
 
-#     with sync_playwright() as p:
-#         browser = p.chromium.launch(headless=True)  
-#         page = browser.new_page() 
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)  
+        page = browser.new_page() 
 
-#         page.goto(iframe_src)
-#         # page.wait_for_selector(".section-inner")
+        page.goto(iframe_src)
+        # page.wait_for_selector(".section-inner")
 
-#         if "404" in page.title():
-#             browser.close()
-#             return "Euology not found", 404
+        if "404" in page.title():
+            browser.close()
+            return "Euology not found", 404
 
-#         page_source = page.content()  
-#         newSoup = BeautifulSoup(page_source, 'html.parser') 
+        page_source = page.content()  
+        newSoup = BeautifulSoup(page_source, 'html.parser') 
     
-#     newDiv1 = newSoup.find('div', id="container-widget")
+    newDiv1 = newSoup.find('div', id="container-widget")
 
-#     showDivs = newDiv1.find_all('div', class_='w-tick-item col-3 rel')
-#     for show in showDivs:
-#         try:
-#             showDateData = show.find("p", class_="text-color").text[:11].strip()
-#             if showDateData[-1] == ",":
-#                 showDateData = showDateData[:-2]
-#             showDateData += " 2024"
-#             showDate = datetime.strptime(showDateData, "%a, %b %d %Y") 
-#         except Exception as e:
-#             print('Error:', e)
-#             showDate = "Date/time Not Found"
-#         try:
-#             showTitle = show.find("h2", class_="text-color").text.strip()
-#             print(f'Scraping {showTitle} from Fleetwoods')
-#         except:
-#             showTitle = "Title not found"
-#         existing_event = Event.query.filter_by(title=showTitle, show_date=showDate).first()
-#         if existing_event:
-#             print(f'{showTitle} already in db: skipping')
-#             continue
-#         if existing_event is None:
-#             try:
-#                 showImage = show.find('img')["style"][22:-2]
-#             except:
-#                 showImage = "app/static/sad.jpg"
-#             try:
-#                 secondHalfOfLink = show.find("a")['href']
-#                 showTickets = 'https://app.showslinger.com' + secondHalfOfLink
-#             except:
-#                 showTickets = "Tickets Not Found"
-#             fleetwoodsEvents.append({
-#                 "showDate": showDate, 
-#                 "showTitle": showTitle, 
-#                 "showImage": showImage, 
-#                 "showTickets": showTickets})
-#             new_event = Event(
-#                 venue = "Fleetwoods",
-#                 title = showTitle,
-#                 show_date = showDate,
-#                 tickets = showTickets,
-#                 image = showImage
-#             )
-#             db.session.add(new_event)
-#             db.session.commit()
-#     return fleetwoodsEvents
+    showDivs = newDiv1.find_all('div', class_='w-tick-item col-3 rel')
+    for show in showDivs:
+        try:
+            showDateData = show.find("p", class_="text-color").text[:11].strip()
+            if showDateData[-1] == ",":
+                showDateData = showDateData[:-2]
+            showDateData += " 2024"
+            showDate = datetime.strptime(showDateData, "%a, %b %d %Y") 
+        except Exception as e:
+            print('Error:', e)
+            showDate = "Date/time Not Found"
+        try:
+            showTitle = show.find("h2", class_="text-color").text.strip()
+            print(f'Scraping {showTitle} from Fleetwoods')
+        except:
+            showTitle = "Title not found"
+        existing_event = Event.query.filter_by(title=showTitle, show_date=showDate).first()
+        if existing_event:
+            print(f'{showTitle} already in db: skipping')
+            continue
+        if existing_event is None:
+            try:
+                showImage = show.find('img')["style"][22:-2]
+            except:
+                showImage = "app/static/sad.jpg"
+            try:
+                secondHalfOfLink = show.find("a")['href']
+                showTickets = 'https://app.showslinger.com' + secondHalfOfLink
+            except:
+                showTickets = "Tickets Not Found"
+            fleetwoodsEvents.append({
+                "showDate": showDate, 
+                "showTitle": showTitle, 
+                "showImage": showImage, 
+                "showTickets": showTickets})
+            new_event = Event(
+                venue = "Fleetwoods",
+                title = showTitle,
+                show_date = showDate,
+                tickets = showTickets,
+                image = showImage
+            )
+            db.session.add(new_event)
+            db.session.commit()
+    return fleetwoodsEvents
     
     
     

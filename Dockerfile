@@ -1,19 +1,17 @@
+
 FROM python:3.9.6-slim
 
 RUN apt-get update && apt-get install -y chromium
-
 ENV PLAYWRIGHT_BROWSERS_PATH=/usr/lib/playwright
-# ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD 1
-
-RUN pip install playwright==1.40.0
-
-RUN playwright install
+ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD 1
 
 WORKDIR /usr/src/app
 
 COPY . .
 
 RUN pip install --no-cache-dir -r requirements.txt
+RUN playwright install-deps    
+RUN playwright install
 
 RUN apt-get update && apt-get install -y \
     libglib2.0-0 \
@@ -40,4 +38,8 @@ RUN apt-get update && apt-get install -y \
 
 EXPOSE 80
 
-CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:80", "app:app"]
+CMD ["gunicorn", "--workers=3", "--timeout=120", "--bind=0.0.0.0:8000", "app:app"]
+
+
+
+
