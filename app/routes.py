@@ -60,22 +60,22 @@ def sorted():
 
 @app.route('/update-feed')
 def update():
-    last_entry = Event.query.order_by(Event.created.desc()).first()
-    if last_entry is not None:
+    # last_entry = Event.query.order_by(Event.created.desc()).first()
+    # if last_entry is not None:
         # time_diff = datetime.now() - last_entry.created
         # twentyFourHours = 24 * 60 * 60
         # if time_diff.total_seconds() > twentyFourHours:
-            print('LAST ENTRY DATE: ', last_entry.created)
+            # print('LAST ENTRY DATE: ', last_entry.created)
             # print('TIME DIFFERENCE: ', time_diff)
-            print("Scraping data...", datetime.now())
-            routes.eagle()
-            routes.peel()
-            routes.rabbit()
-            routes.cherokee()
-            routes.salvage()
-            routes.eulogy()
-            routes.fleetwoods()
-            print("Scraping completed.", datetime.now().time())
+    print("Scraping data...", datetime.now())
+    routes.eagle()
+    routes.peel()
+    routes.rabbit()
+    routes.cherokee()
+    routes.salvage()
+    # routes.eulogy()
+    # routes.fleetwoods()
+    print("Scraping completed.", datetime.now().time())
     e = Event.query.order_by(Event.show_date).all()
     events = helper(e)
     lastDate = events[0]
