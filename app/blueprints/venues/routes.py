@@ -21,51 +21,55 @@ def eagle():
     if resp.status_code == 200:
         mainDiv = soup.find("div", class_="rhp-desktop-list")
         for child in mainDiv.children:
-            if child.name == "span":
-               showYear = child.span.text[-4::].strip()
-            elif child.name == "div":
-                try:
-                    showDay = child.find(id="eventDate").text.strip()
-                    showDateStr = showDay + " " + showYear
+            try:
+                if child.name == "span":
+                    showYear = child.span.text[-4::].strip()
+                elif child.name == "div":
                     try:
-                        showDate = datetime.strptime(showDateStr, "%a, %b %d %Y")
+                        showDay = child.find(id="eventDate").text.strip()
+                        showDateStr = showDay + " " + showYear
+                        try:
+                            showDate = datetime.strptime(showDateStr, "%a, %b %d %Y")
+                        except:
+                            showDate = datetime.strptime(showDateStr, "%a, %B %d %Y")
                     except:
-                        showDate = datetime.strptime(showDateStr, "%a, %B %d %Y")
-                except:
-                    showDate = "Date Not Found"
-                try:
-                    showTitle = child.find(id="eventTitle").find('h2').text
-                    print(f'Scraping {showTitle} at grey eagle')
-                except:
-                    showTitle = "Title not found"
-                if showDate != "Date Not Found":    
-                    existing_event = Event.query.filter_by(title=showTitle, show_date=showDate).first()
-                    if existing_event:
-                        print(f'{showTitle} already in db: skipping')
-                        continue
-                    if existing_event is None:
-                        try:
-                            showImage = child.find("img", class_="eventListImage")['src'] 
-                        except:
-                            showImage = "app/static/sad.jpg"
-                        try:
-                            showTickets = child.find(id="eventTitle")["href"]
-                        except:
-                            showTickets = "Tickets Not Found"
-                        eagleEvents.append({
-                            "showDate": showDate, 
-                            "showTitle": showTitle, 
-                            "showImage": showImage, 
-                            "showTickets": showTickets})
-                        new_event = Event(
-                            venue = "Grey Eagle",
-                            title = showTitle,
-                            show_date = showDate,
-                            tickets = showTickets,
-                            image = showImage,
-                        )
-                        db.session.add(new_event)
-                        db.session.commit()
+                        showDate = "Date Not Found"
+                    try:
+                        showTitle = child.find(id="eventTitle").find('h2').text
+                        print(f'Scraping {showTitle} at grey eagle')
+                    except:
+                        showTitle = "Title not found"
+                    if showDate != "Date Not Found":    
+                        existing_event = Event.query.filter_by(title=showTitle, show_date=showDate).first()
+                        if existing_event:
+                            print(f'{showTitle} already in db: skipping')
+                            continue
+                        if existing_event is None:
+                            try:
+                                showImage = child.find("img", class_="eventListImage")['src'] 
+                            except:
+                                showImage = "app/static/sad.jpg"
+                            try:
+                                showTickets = child.find(id="eventTitle")["href"]
+                            except:
+                                showTickets = "Tickets Not Found"
+                            eagleEvents.append({
+                                "showDate": showDate, 
+                                "showTitle": showTitle, 
+                                "showImage": showImage, 
+                                "showTickets": showTickets})
+                            new_event = Event(
+                                venue = "Grey Eagle",
+                                title = showTitle,
+                                show_date = showDate,
+                                tickets = showTickets,
+                                image = showImage,
+                            )
+                            db.session.add(new_event)
+                            db.session.commit()
+            except Exception as e:
+                print(f"An error occurred: {e}")
+                continue
     else:
         print(f"Failed to retrieve eagle Page. Status code: {resp.status_code}")
     return eagleEvents
@@ -81,50 +85,54 @@ def peel():
     if resp.status_code == 200:
         mainDiv = soup.find("div", class_="rhp-desktop-list")
         for child in mainDiv:
-            if child.name == "span":
-                showYear = child.span.text[-4::].strip()
-            elif child.name == "div":
-                try:
-                    showDay = child.find(id="eventDate").text.strip() 
-                    showDateStr = showDay + " " + showYear
-                    if showDateStr[5:9].upper() == "SEPT" or showDateStr[5:9].upper() == "MARCH" or showDateStr[5:9].upper() == "JUNE" or showDateStr[5:9].upper() == "JULY":
-                        showDateStr = showDateStr[0:8] + showDateStr[9::]
-                    showDate = datetime.strptime(showDateStr, "%a, %b %d %Y")
-                except:
-                    showDate = "Date Not Found"
-                try:
-                    showTitle = child.find(id="eventTitle").find('h2').text.strip()
-                    print(f'Scraping {showTitle} at Peel')
-                except:
-                    showTitle = "Title not found"         
-                if showDate != "Date Not Found":
-                    existing_event = Event.query.filter_by(title=showTitle, show_date=showDate).first()
-                    if existing_event:
-                        print(f'{showTitle} already in db: skipping')
-                        continue
-                    if existing_event is None:
-                        try:
-                            showImage = child.find("img", class_="eventListImage")['src'] 
-                        except:
-                            showImage = "app/static/sad.jpg"
-                        try:
-                            showTickets = child.find(id="eventTitle")["href"]
-                        except:
-                            showTickets = "Tickets Not Found"
-                        peelEvents.append({
-                            "showDate": showDate, 
-                            "showTitle": showTitle, 
-                            "showImage": showImage, 
-                            "showTickets": showTickets})
-                        new_event = Event(
-                            venue = "Orange Peel",
-                            title = showTitle,
-                            show_date = showDate,
-                            tickets = showTickets,
-                            image = showImage,
-                        )
-                        db.session.add(new_event)
-                        db.session.commit()
+            try:
+                if child.name == "span":
+                    showYear = child.span.text[-4::].strip()
+                elif child.name == "div":
+                    try:
+                        showDay = child.find(id="eventDate").text.strip() 
+                        showDateStr = showDay + " " + showYear
+                        if showDateStr[5:9].upper() == "SEPT" or showDateStr[5:9].upper() == "MARCH" or showDateStr[5:9].upper() == "JUNE" or showDateStr[5:9].upper() == "JULY":
+                            showDateStr = showDateStr[0:8] + showDateStr[9::]
+                        showDate = datetime.strptime(showDateStr, "%a, %b %d %Y")
+                    except:
+                        showDate = "Date Not Found"
+                    try:
+                        showTitle = child.find(id="eventTitle").find('h2').text.strip()
+                        print(f'Scraping {showTitle} at Peel')
+                    except:
+                        showTitle = "Title not found"         
+                    if showDate != "Date Not Found":
+                        existing_event = Event.query.filter_by(title=showTitle, show_date=showDate).first()
+                        if existing_event:
+                            print(f'{showTitle} already in db: skipping')
+                            continue
+                        if existing_event is None:
+                            try:
+                                showImage = child.find("img", class_="eventListImage")['src'] 
+                            except:
+                                showImage = "app/static/sad.jpg"
+                            try:
+                                showTickets = child.find(id="eventTitle")["href"]
+                            except:
+                                showTickets = "Tickets Not Found"
+                            peelEvents.append({
+                                "showDate": showDate, 
+                                "showTitle": showTitle, 
+                                "showImage": showImage, 
+                                "showTickets": showTickets})
+                            new_event = Event(
+                                venue = "Orange Peel",
+                                title = showTitle,
+                                show_date = showDate,
+                                tickets = showTickets,
+                                image = showImage,
+                            )
+                            db.session.add(new_event)
+                            db.session.commit()
+            except Exception as e:
+                print(f"An error occurred: {e}")
+                continue
     else:
         print(f"Failed to retrieve peel Page. Status code: {resp.status_code}")
     return peelEvents
@@ -159,7 +167,6 @@ def rabbit():
 
             except Exception as e:
                 print(f"An error occurred: {e}")
-                # showDate = datetime.now()
             try:
                 showTitle = show.find("h3", class_="tribe-events-calendar-list__event-title").find("a")['title']
                 print(f'{showTitle} at Rabbit')
@@ -320,7 +327,7 @@ def eulogy():
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)  
         page = browser.new_page() 
-        page.goto(url)
+        page.goto(url, timeout=60000)
         ageVerificationBtn = 'button[name="confirm-age"]'
 
         if page.is_visible(ageVerificationBtn):
