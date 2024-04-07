@@ -11,7 +11,6 @@ headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleW
 
 @venues.route('/eagle')
 def eagle():
-    
     url = "https://www.thegreyeagle.com/calendar/"
     resp = requests.get(url, headers=headers)
     soup = BeautifulSoup(resp.content, "html.parser")
@@ -325,8 +324,9 @@ def salvage():
 def eulogy():
     url = 'https://burialbeer.com/pages/eulogy'
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)  
-        page = browser.new_page() 
+        browser = p.chromium.launch(headless=True)
+        context = browser.new_context(user_agent=headers['User-Agent'])    
+        page = context.new_page() 
         page.goto(url, timeout=60000)
         ageVerificationBtn = 'button[name="confirm-age"]'
 
@@ -397,7 +397,8 @@ def fleetwoods():
     url = 'https://fleetwoodschapel.com/calendar-of-events/'
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)  
-        page = browser.new_page() 
+        context = browser.new_context(user_agent=headers['User-Agent'])    
+        page = context.new_page() 
 
         page.goto(url)
         page.wait_for_selector("#showslinger-widget-container-47077")  
@@ -419,7 +420,8 @@ def fleetwoods():
     iframe_src = divFour.find('iframe')["src"]
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)  
-        page = browser.new_page() 
+        context = browser.new_context(user_agent=headers['User-Agent'])    
+        page = context.new_page() 
 
         page.goto(iframe_src)
         page.wait_for_selector(".container-l")
