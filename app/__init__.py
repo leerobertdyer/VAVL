@@ -13,9 +13,9 @@ migrate = Migrate(app, db)
 
 render = os.environ.get('RENDER') == 'true' 
 
-# with sync_playwright() as p:
-#     browser = p.chromium.launch(headless=True)
-#     driver = browser.new_page() 
+with sync_playwright() as p:
+    browser = p.chromium.launch(headless=True)
+    driver = browser.new_page() 
     
 if render:
     indexURL = 'https://vavl.onrender.com'
