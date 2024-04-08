@@ -1,4 +1,3 @@
-from flask import jsonify
 from . import venues
 from bs4 import BeautifulSoup
 import requests
@@ -7,363 +6,86 @@ from datetime import datetime
 from app import db
 from playwright.sync_api import sync_playwright
 import requests
-from .supabaseHelper import save_temp_image, download_image, upload_to_supabase, get_supabase_image_url, headers
+from .imageHelpers import save_temp_image, download_image, upload_to_supabase, get_supabase_image_url
+from .beautifulScraper import beautifulScraper
 
 @venues.route('/eagle')
 def eagle():
-    url = "https://www.thegreyeagle.com/calendar/"
-    resp = requests.get(url, headers=headers)
-    soup = BeautifulSoup(resp.content, "html.parser")
-    
-    eagleEvents = []
-    showYear = ''
-    if resp.status_code == 200:
-        mainDiv = soup.find("div", class_="rhp-desktop-list")
-        for child in mainDiv.children:
-            try:
-                if child.name == "span":
-                    showYear = child.span.text[-4::].strip()
-                elif child.name == "div":
-                    try:
-                        showDay = child.find(id="eventDate").text.strip()
-                        showDateStr = showDay + " " + showYear
-                        try:
-                            showDate = datetime.strptime(showDateStr, "%a, %b %d %Y")
-                        except:
-                            showDate = datetime.strptime(showDateStr, "%a, %B %d %Y")
-                    except:
-                        showDate = "Date Not Found"
-                    try:
-                        showTitle = child.find(id="eventTitle").find('h2').text
-                        print(f'Scraping {showTitle} at grey eagle')
-                    except:
-                        showTitle = "Title not found"
-                    if showDate != "Date Not Found":    
-                        existing_event = Event.query.filter_by(title=showTitle, show_date=showDate).first()
-                        if existing_event:
-                            print(f'{showTitle} already in db: skipping')
-                            return eagleEvents
-                        if existing_event is None:
-                            try:
-                                original_image_url = child.find("img", class_="eventListImage")['src'] 
-                                image_data = download_image(original_image_url)
-                                if image_data:
-                                    temp_file_path = save_temp_image(image_data)
-                                    if temp_file_path:
-                                        file_path = 'eagle/' + datetime.now().strftime("%Y%m%d%H%M%S") + '.jpg'
-                                        upload_response = upload_to_supabase(temp_file_path, file_path)
-                                        if upload_response:
-                                            showImage = get_supabase_image_url(file_path)
-                                        else:
-                                            showImage = "app/static/sad.jpg"
-                            except Exception as e:
-                                print(f"An error occurred in processing {showTitle}: {e}")
-                            try:
-                                showTickets = child.find(id="eventTitle")["href"]
-                            except:
-                                showTickets = "Tickets Not Found"
-                            eagleEvents.append({
-                                "showDate": showDate, 
-                                "showTitle": showTitle, 
-                                "showImage": showImage, 
-                                "showTickets": showTickets})
-                            new_event = Event(
-                                venue = "Grey Eagle",
-                                title = showTitle,
-                                show_date = showDate,
-                                tickets = showTickets,
-                                image = showImage,
-                            )
-                            db.session.add(new_event)
-                            db.session.commit()
-            except Exception as e:
-                print(f"An error occurred: {e}")
-                continue
-    else:
-        print(f"Failed to retrieve eagle Page. Status code: {resp.status_code}")
+    eventContainer={"container": "div", "classes": "col-12 eventWrapper rhpSingleEvent py-4 px-0"}
+    dateContainer={"container": "div", "classes": "mb-0 eventMonth singleEventDate text-uppercase"}
+    titleContainer={"container": "h2", "classes": "font1by25 font1By5remMD marginBottom3PX lineHeight12 font1By75RemSM font1By5RemXS mt-md-0 mb-md-2"}
+    imageContainer={"container": "img", "classes": "eventListImage", "attribute": "src"}
+    ticketContainerIdOrClass = "eventTitle"
+    eagleEvents = beautifulScraper("https://www.thegreyeagle.com/calendar/", eventContainer, dateContainer, titleContainer, imageContainer, ticketContainerIdOrClass, "Grey Eagle")
     return eagleEvents
 
-@venues.route('/peel')
+@venues.route('/peel') ## Still need to run these and down
 def peel():
-    url = "https://theorangepeel.net/events/?view=list"
-    resp = requests.get(url, headers=headers)
-    soup = BeautifulSoup(resp.content, "html.parser")
-    
-    peelEvents = []
-    showYear = ''
-    if resp.status_code == 200:
-        mainDiv = soup.find("div", class_="rhp-desktop-list")
-        for child in mainDiv:
-            try:
-                if child.name == "span":
-                    showYear = child.span.text[-4::].strip()
-                elif child.name == "div":
-                    try:
-                        showDay = child.find(id="eventDate").text.strip() 
-                        showDateStr = showDay + " " + showYear
-                        if showDateStr[5:9].upper() == "SEPT" or showDateStr[5:9].upper() == "MARCH" or showDateStr[5:9].upper() == "JUNE" or showDateStr[5:9].upper() == "JULY":
-                            showDateStr = showDateStr[0:8] + showDateStr[9::]
-                        showDate = datetime.strptime(showDateStr, "%a, %b %d %Y")
-                    except:
-                        showDate = "Date Not Found"
-                    try:
-                        showTitle = child.find(id="eventTitle").find('h2').text.strip()
-                        print(f'Scraping {showTitle} at Peel')
-                    except:
-                        showTitle = "Title not found"         
-                    if showDate != "Date Not Found":
-                        existing_event = Event.query.filter_by(title=showTitle, show_date=showDate).first()
-                        if existing_event:
-                            print(f'{showTitle} already in db: skipping')
-                            return peelEvents
-                        if existing_event is None:
-                            try:
-                                original_image_url = child.find("img", class_="eventListImage")['src'] 
-                                image_data = download_image(original_image_url)
-                                if image_data:
-                                    temp_file_path = save_temp_image(image_data)
-                                    if temp_file_path:
-                                        file_path = 'peel/' + datetime.now().strftime("%Y%m%d%H%M%S") + '.jpg'
-                                        upload_response = upload_to_supabase(temp_file_path, file_path)
-                                        if upload_response:
-                                            showImage = get_supabase_image_url(file_path)
-                                        else:
-                                            showImage = "app/static/sad.jpg"
-                            except  Exception as e:
-                                print(f"An error occurred in processing {showTitle}: {e}")
-                            try:
-                                showTickets = child.find(id="eventTitle")["href"]
-                            except:
-                                showTickets = "Tickets Not Found"
-                            peelEvents.append({
-                                "showDate": showDate, 
-                                "showTitle": showTitle, 
-                                "showImage": showImage, 
-                                "showTickets": showTickets})
-                            new_event = Event(
-                                venue = "Orange Peel",
-                                title = showTitle,
-                                show_date = showDate,
-                                tickets = showTickets,
-                                image = showImage,
-                            )
-                            db.session.add(new_event)
-                            db.session.commit()
-            except Exception as e:
-                print(f"An error occurred: {e}")
-                continue
-    else:
-        print(f"Failed to retrieve peel Page. Status code: {resp.status_code}")
+    eventContainer={"container": "div", "classes": "col-12 eventWrapper rhpSingleEvent py-4 px-0"}
+    dateContainer={"container": "div", "classes": "mb-0 eventMonth singleEventDate text-uppercase"}
+    titleContainer={"container": "h2", "classes": "font1by25 font1By5remMD marginBottom3PX lineHeight12 font1By75RemSM font1By5RemXS mt-md-0 mb-md-2"}
+    imageContainer={"container": "img", "classes": "eventListImage", "attribute": "src"}
+    ticketContainerIdOrClass = "ctaspan-97828"
+    peelEvents = beautifulScraper("https://theorangepeel.net/events/?view=list", eventContainer, dateContainer, titleContainer, imageContainer, ticketContainerIdOrClass, "Orange Peel")
     return peelEvents
 
 @venues.route('/rabbit')
 def rabbit():    
-    url = "https://rabbitrabbitavl.com/calendar/"
-    resp = requests.get(url, headers=headers)
-    soup = BeautifulSoup(resp.content, "html.parser")
-    
-    rabbitEvents = []
-    
-    if resp.status_code == 200:
-        showDivs = soup.find_all("div", class_="tribe-events-calendar-list__event-row")
-        for show in showDivs:
-            try:
-                currentYear = datetime.now().year
-                dateAndTime = show.find("span", class_="tribe-event-date-start").text 
-                showDateStrData = dateAndTime[:-9].strip()
-                showDateStr = showDateStrData + " " + str(currentYear)
-                try:
-                    showDate = datetime.strptime(showDateStr, "%B %d %Y")
-                except ValueError:
-                    try:
-                        showDate = datetime.strptime(showDateStr, "%b %d %Y" )
-                    except ValueError:
-                        showDate = "Date/time Not Found"
-
-            except Exception as e:
-                print(f"An error occurred: {e}")
-            try:
-                showTitle = show.find("h3", class_="tribe-events-calendar-list__event-title").find("a")['title']
-                print(f'{showTitle} at Rabbit')
-            except:
-                showTitle = "Title not found"
-            if showDate != "Date/time Not Found":
-                existing_event = Event.query.filter_by(title=showTitle, show_date=showDate).first()
-                if existing_event:
-                    print(f'{showTitle} already in db: skipping')
-                    return rabbitEvents
-                if existing_event is None:
-                    try:
-                        original_image_url = show.find("img", class_="tribe-events-calendar-list__event-featured-image")['src'] 
-                        image_data = download_image(original_image_url)
-                        if image_data:
-                            temp_file_path = save_temp_image(image_data)
-                            if temp_file_path:
-                                file_path = 'peel/' + datetime.now().strftime("%Y%m%d%H%M%S") + '.jpg'
-                                upload_response = upload_to_supabase(temp_file_path, file_path)
-                                if upload_response:
-                                    showImage = get_supabase_image_url(file_path)
-                                else:
-                                    showImage = "app/static/sad.jpg"
-                    except Exception as e:
-                        print(f"An error occurred in processing {showTitle}: {e}")
-                    try:
-                        showTickets = show.find("h3", class_="tribe-events-calendar-list__event-title").find("a")['href']
-                    except:
-                        showTickets = "Tickets Not Found"
-                    rabbitEvents.append({
-                        "showDate": showDate, 
-                        "showTitle": showTitle, 
-                        "showImage": showImage, 
-                        "showTickets": showTickets})
-                    new_event = Event(
-                        venue = "Rabbit Rabbit",
-                        title = showTitle,
-                        show_date = showDate,
-                        tickets = showTickets,
-                        image = showImage
-                    )
-                    db.session.add(new_event)
-                    db.session.commit()
-    else:
-        print(f"Failed to retrieve Rabbit Page. Status code: {resp.status_code}")
+    eventContainer={"container": "div", "classes": "tribe-common-g-row tribe-events-calendar-list__event-row tribe-events-calendar-list__event-row--featured"}
+    dateContainer={"container": "span", "classes": "tribe-event-date-start"}
+    titleContainer={"container": "h3", "classes": "tribe-events-calendar-list__event-title"}
+    imageContainer={"container": "img", "classes": "tribe-events-calendar-list__event-featured-image", "attribute": "src"}
+    ticketContainerIdOrClass = "tribe-events-calendar-list__event-title"
+    rabbitEvents = beautifulScraper("https://rabbitrabbitavl.com/calendar/", eventContainer, dateContainer, titleContainer, imageContainer, ticketContainerIdOrClass, "Rabbit Rabbit")
     return rabbitEvents
 
 @venues.route('/cherokee')
 def cherokee():
-    url = 'https://www.harrahscherokeecenterasheville.com/events-tickets/'
-    resp = requests.get(url, headers=headers)
-    soup = BeautifulSoup(resp.content, 'html.parser')
-    
-    cherokeeEvents = []
-    
-    if resp.status_code == 200:
-        showDivs = soup.find_all("div", class_="list-view")
-        for show in showDivs:
-            try:
-                showDay = show.find("div", class_="event-date").text.strip()
-                if len(showDay) < 5:
-                    alternateDate = show.find("div", class_="event-subtitle").text.strip()
-                    for char in alternateDate:
-                        if char.isdigit():
-                            showDay += " " + char
-                            break
-                showDate = showDay + " 2024"    
-            except:
-                showDate = "Date Not Found"
-            try:
-                showTitle = show.find("div", class_="event-details").find("h3").text
-                print(f'scraping {showTitle} at Cherokee')
-            except:
-                showTitle = "Title not found"
-            if showDate != "Date Not Found":
-                existing_event = Event.query.filter_by(title=showTitle, show_date=showDate).first()
-                if existing_event:
-                    print(f'{showTitle} already in db: skipping')
-                    return cherokeeEvents
-                if existing_event is None:
-                    try:
-                        original_image_url = show.find("div", class_="image-wrapper").find("img")['src'] 
-                        image_data = download_image(original_image_url)
-                        if image_data:
-                            temp_file_path = save_temp_image(image_data)
-                            if temp_file_path:
-                                file_path = 'peel/' + datetime.now().strftime("%Y%m%d%H%M%S") + '.jpg'
-                                upload_response = upload_to_supabase(temp_file_path, file_path)
-                                if upload_response:
-                                    showImage = get_supabase_image_url(file_path)
-                                else:
-                                    showImage = "app/static/sad.jpg"
-                    except Exception as e:
-                        print(f"An error occurred in processing {showTitle}: {e}")
-                    try:
-                        showTickets = show.find("a", class_="event-ticket")['href']
-                    except:
-                        showTickets = "Tickets Not Found"
-                    cherokeeEvents.append({
-                        "showDate": showDate, 
-                        "showTitle": showTitle, 
-                        "showImage": showImage, 
-                        "showTickets": showTickets})
-                    new_event = Event(
-                        venue = "Harrah's Cherokee",
-                        title = showTitle,
-                        show_date = showDate,
-                        tickets = showTickets,
-                        image = showImage
-                    )
-                    db.session.add(new_event)
-                    db.session.commit()
-    else:
-        print(f"Failed to retrieve cherokee page. Status code: {resp.status_code}")
+    eventContainer={"container": "div", "classes": "col col-lg-4 list-view"}
+    dateContainer={"container": "div", "classes": "h1"}
+    titleContainer={"container": "h3", "classes": ""}
+    imageContainer={"container": "source", "classes": "", "attribute": "srcset"}
+    ticketContainerIdOrClass = "event-ticket"
+    cherokeeEvents = beautifulScraper("https://www.harrahscherokeecenterasheville.com/events-tickets/", eventContainer, dateContainer, titleContainer, imageContainer, ticketContainerIdOrClass, "Harrah's Cherokee")
     return cherokeeEvents
     
 @venues.route('/salvage')
 def salvage():
-    url = 'https://salvagestation.com/events/'
-    resp = requests.get(url, headers=headers)
-    soup = BeautifulSoup(resp.content, 'html.parser')
-    
-    salvageEvents = []
-    
-    if resp.status_code == 200:
-        showDivs = soup.find_all("div", class_="event-list-wrapper")
-        for show in showDivs:
-            try:
-                showDay = show.find("div", class_="event-list-day").text.strip()
-                showMonth = show.find("div", class_="event-list-month").text.strip()
-                showNum = show.find("div", class_="event-list-number").text.strip()
-                showYear = show.find("div", class_="event-list-year").text.strip()
-                showDateStr = f"{showDay} {showMonth} {showNum} {showYear}"
-                showDate = datetime.strptime(showDateStr, "%a %b %d %Y")
-            except:
-                showDate = "Date/time Not Found"
-            try:
-                showTitle = show.find("div", class_="event-list-title").text.strip()
-                print(f'Scraping {showTitle} from salvage')
-            except:
-                showTitle = "Title not found"
-            if showDate != "Date/time Not Found":
-                existing_event = Event.query.filter_by(title=showTitle, show_date=showDate).first()
-                if existing_event:
-                    print(f'{showTitle} already in db: skipping')
-                    return salvageEvents
-                if existing_event is None:
-                    try:
-                        original_image_url = show.find("a", class_="event-list-image")["style"][23:-3]
-                        image_data = download_image(original_image_url)
-                        if image_data:
-                            temp_file_path = save_temp_image(image_data)
-                            if temp_file_path:
-                                file_path = 'peel/' + datetime.now().strftime("%Y%m%d%H%M%S") + '.jpg'
-                                upload_response = upload_to_supabase(temp_file_path, file_path)
-                                if upload_response:
-                                    showImage = get_supabase_image_url(file_path)
-                                else:
-                                    showImage = "app/static/sad.jpg"
-                    except Exception as e:
-                        print(f"An error occurred in processing {showTitle}: {e}")
-                    try:
-                        showTickets = show.find("div", class_="event-list-titles").find("a")["href"]
-                    except:
-                        showTickets = "Tickets Not Found"
-                    salvageEvents.append({
-                        "showDate": showDate, 
-                        "showTitle": showTitle, 
-                        "showImage": showImage, 
-                        "showTickets": showTickets})
-                    new_event = Event(
-                        venue = "Salvage Station",
-                        title = showTitle,
-                        show_date = showDate,
-                        tickets = showTickets,
-                        image = showImage
-                    )
-                    db.session.add(new_event)
-                    db.session.commit()
-    else:
-        print(f"Failed to retrieve salvage page. Status code: {resp.status_code}")
+    eventContainer={"container": "div", "classes": "event-list-wrapper"}
+    dateContainer={"container": "div", "classes": "event-list-date-top"}
+    titleContainer={"container": "div", "classes": "event-list-title"}
+    imageContainer={"container": "a", "classes": "event-list-image", "attribute": "style"}
+    ticketContainerIdOrClass = "event-list-button buy"
+    salvageEvents = beautifulScraper("https://salvagestation.com/events/", eventContainer, dateContainer, titleContainer, imageContainer, ticketContainerIdOrClass, "Salvage Station")
     return salvageEvents
+
+@venues.route('/staticage')
+def staticage():
+    eventContainer={"container": "a", "classes": "border-x-0 border-b-2 last-of-type:border-b-0 border-background-200 p-3 false"}
+    dateContainer={"container": "span", "classes": ""}
+    titleContainer={"container": "h2", "classes": "text-md md:text-2xl flex-2"}
+    imageContainer={"container": "img", "classes": "object-cover", "attribute": "srcset"}
+    ticketContainerIdOrClass = "border-x-0 border-b-2 last-of-type:border-b-0 border-background-200 p-3 false"
+    staticageEvents = beautifulScraper("https://www.staticagenc.com/events", eventContainer, dateContainer, titleContainer, imageContainer, ticketContainerIdOrClass, "Static Age")
+    return staticageEvents
+
+    # url = 'https://www.staticagenc.com/events'
+    # resp = requests.get(url, headers=headers)
+    # soup = BeautifulSoup(resp.content, 'html.parser')
+    
+    # staticageEvents = []
+    
+    # if resp.status_code == 200:
+    #     showDivs = soup.find("div", class_="grid grid-cols-1 gap-1")
+    #     for show in showDivs:
+    #         try:
+    #             show_date_raw = show.find("span").text.strip()
+    #             show_date = datetime.strptime(show_date_raw, "%a %d %b %Y")
+    #         except Exception as e:
+    #             print(f'Error: {e}')
+    #             continue
+                
+    # return staticageEvents
 
 
 @venues.route('/eulogy')
@@ -462,7 +184,6 @@ def fleetwoods():
             browser.close()
             return "Euology not found", 404
         
-
         page_source = page.content()  
         soup = BeautifulSoup(page_source, 'html.parser')
 
@@ -546,6 +267,4 @@ def fleetwoods():
                 db.session.add(new_event)
                 db.session.commit()
     return fleetwoodsEvents
-    
-    
     

@@ -1,27 +1,25 @@
 from flask import render_template, request, jsonify
 from .models import Event
 from app import app
-from datetime import datetime, timedelta
-from .blueprints.venues import routes
-
+from datetime import datetime
 
 def helper(allEvents):
-    lastDate = allEvents[0].show_date.date()
+    if not allEvents:
+        return []  # Return an empty list if allEvents is empty
     today = datetime.now().date()
-    i = 0
-    while lastDate < today:
-        i += 1
-        lastDate = allEvents[i].show_date.date()
     events = []
-    events.append({'newDate': lastDate.strftime('%B %-d, %Y')})
+    process_events = False
+    lastDate = None
+    for event in allEvents:
+        event_date = event.show_date.date()
+        if event_date >= today:
+            process_events = True
 
-    for e in allEvents:
-        if e.show_date.date() < lastDate:
-            continue
-        if e.show_date.date() > lastDate:
-            events.append({'newDate': e.show_date.strftime('%B %-d, %Y')})
-            lastDate = e.show_date.date()
-        events.append({'venue': e.venue, 'title': e.title, 'tickets': e.tickets, 'image': e.image})
+        if process_events:
+            if lastDate is None or event_date > lastDate:
+                lastDate = event_date
+                events.append({'newDate': lastDate.strftime('%B %-d, %Y')})
+            events.append({'venue': event.venue, 'title': event.title, 'tickets': event.tickets, 'image': event.image})
     return events
 
 @app.route('/next-events')
@@ -66,27 +64,3 @@ def sorted():
     events = helper(query)
     lastDate = events[0]
     return render_template('home.html', events=events, lastDate=lastDate)
-
-@app.route('/update-feed')
-def update():
-    # last_entry = Event.query.order_by(Event.created.desc()).first()
-    # if last_entry is not None:
-        # time_diff = datetime.now() - last_entry.created
-        # twentyFourHours = 24 * 60 * 60
-        # if time_diff.total_seconds() > twentyFourHours:
-            # print('LAST ENTRY DATE: ', last_entry.created)
-            # print('TIME DIFFERENCE: ', time_diff)
-    print("Scraping data...", datetime.now())
-    routes.eagle()
-    routes.peel()
-    routes.rabbit()
-    routes.cherokee()
-    routes.salvage()
-    routes.eulogy()
-    routes.fleetwoods()
-    print("Scraping completed.", datetime.now().time())
-    e = Event.query.order_by(Event.show_date).all()
-    events = helper(e)
-    lastDate = events[0]
-    return "Database Updated"
-    
