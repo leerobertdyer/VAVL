@@ -7,6 +7,6 @@ class Event(db.Model):
     show_date = db.Column(db.DateTime)
     tickets = db.Column(db.String)
     image = db.Column(db.String)
-    created = db.Column(db.DateTime, server_default=db.func.now())
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
 
     

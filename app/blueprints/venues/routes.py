@@ -6,8 +6,8 @@ from ...models import Event
 from datetime import datetime
 from app import db
 from playwright.sync_api import sync_playwright
-
-headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36'}
+import requests
+from .supabaseHelper import save_temp_image, download_image, upload_to_supabase, get_supabase_image_url, headers
 
 @venues.route('/eagle')
 def eagle():
@@ -45,9 +45,19 @@ def eagle():
                             continue
                         if existing_event is None:
                             try:
-                                showImage = child.find("img", class_="eventListImage")['src'] 
-                            except:
-                                showImage = "app/static/sad.jpg"
+                                original_image_url = child.find("img", class_="eventListImage")['src'] 
+                                image_data = download_image(original_image_url)
+                                if image_data:
+                                    temp_file_path = save_temp_image(image_data)
+                                    if temp_file_path:
+                                        file_path = 'eagle/' + datetime.now().strftime("%Y%m%d%H%M%S") + '.jpg'
+                                        upload_response = upload_to_supabase(temp_file_path, file_path)
+                                        if upload_response:
+                                            showImage = get_supabase_image_url(file_path)
+                                        else:
+                                            showImage = "app/static/sad.jpg"
+                            except Exception as e:
+                                print(f"An error occurred in processing {showTitle}: {e}")
                             try:
                                 showTickets = child.find(id="eventTitle")["href"]
                             except:
@@ -108,9 +118,19 @@ def peel():
                             continue
                         if existing_event is None:
                             try:
-                                showImage = child.find("img", class_="eventListImage")['src'] 
-                            except:
-                                showImage = "app/static/sad.jpg"
+                                original_image_url = child.find("img", class_="eventListImage")['src'] 
+                                image_data = download_image(original_image_url)
+                                if image_data:
+                                    temp_file_path = save_temp_image(image_data)
+                                    if temp_file_path:
+                                        file_path = 'peel/' + datetime.now().strftime("%Y%m%d%H%M%S") + '.jpg'
+                                        upload_response = upload_to_supabase(temp_file_path, file_path)
+                                        if upload_response:
+                                            showImage = get_supabase_image_url(file_path)
+                                        else:
+                                            showImage = "app/static/sad.jpg"
+                            except  Exception as e:
+                                print(f"An error occurred in processing {showTitle}: {e}")
                             try:
                                 showTickets = child.find(id="eventTitle")["href"]
                             except:
@@ -149,13 +169,9 @@ def rabbit():
         for show in showDivs:
             try:
                 currentYear = datetime.now().year
-                # print('wtf wtf wtf wtf1: ', currentYear)
                 dateAndTime = show.find("span", class_="tribe-event-date-start").text 
-                # print('wtf wtf wtf wtf2: ', dateAndTime)
                 showDateStrData = dateAndTime[:-9].strip()
-                # print('wtf wtf wtf wtf3: ', showDateStrData)
                 showDateStr = showDateStrData + " " + str(currentYear)
-                # print('rabbit rabbit date: ', showDateStr)
                 try:
                     showDate = datetime.strptime(showDateStr, "%B %d %Y")
                 except ValueError:
@@ -171,16 +187,26 @@ def rabbit():
                 print(f'{showTitle} at Rabbit')
             except:
                 showTitle = "Title not found"
-            if showDate == "Date/time Not Found":
+            if showDate != "Date/time Not Found":
                 existing_event = Event.query.filter_by(title=showTitle, show_date=showDate).first()
                 if existing_event:
                     print(f'{showTitle} already in db: skipping')
                     continue
                 if existing_event is None:
                     try:
-                        showImage = show.find("img", class_="tribe-events-calendar-list__event-featured-image")['src'] 
-                    except:
-                        showImage = "app/static/sad.jpg"
+                        original_image_url = show.find("img", class_="tribe-events-calendar-list__event-featured-image")['src'] 
+                        image_data = download_image(original_image_url)
+                        if image_data:
+                            temp_file_path = save_temp_image(image_data)
+                            if temp_file_path:
+                                file_path = 'peel/' + datetime.now().strftime("%Y%m%d%H%M%S") + '.jpg'
+                                upload_response = upload_to_supabase(temp_file_path, file_path)
+                                if upload_response:
+                                    showImage = get_supabase_image_url(file_path)
+                                else:
+                                    showImage = "app/static/sad.jpg"
+                    except Exception as e:
+                        print(f"An error occurred in processing {showTitle}: {e}")
                     try:
                         showTickets = show.find("h3", class_="tribe-events-calendar-list__event-title").find("a")['href']
                     except:
@@ -237,9 +263,19 @@ def cherokee():
                     continue
                 if existing_event is None:
                     try:
-                        showImage = show.find("div", class_="image-wrapper").find("img")['src'] 
-                    except:
-                        showImage = "app/static/sad.jpg"
+                        original_image_url = show.find("div", class_="image-wrapper").find("img")['src'] 
+                        image_data = download_image(original_image_url)
+                        if image_data:
+                            temp_file_path = save_temp_image(image_data)
+                            if temp_file_path:
+                                file_path = 'peel/' + datetime.now().strftime("%Y%m%d%H%M%S") + '.jpg'
+                                upload_response = upload_to_supabase(temp_file_path, file_path)
+                                if upload_response:
+                                    showImage = get_supabase_image_url(file_path)
+                                else:
+                                    showImage = "app/static/sad.jpg"
+                    except Exception as e:
+                        print(f"An error occurred in processing {showTitle}: {e}")
                     try:
                         showTickets = show.find("a", class_="event-ticket")['href']
                     except:
@@ -294,9 +330,19 @@ def salvage():
                     continue
                 if existing_event is None:
                     try:
-                        showImage = show.find("a", class_="event-list-image")["style"][23:-3]
-                    except:
-                        showImage = "app/static/sad.jpg"
+                        original_image_url = show.find("a", class_="event-list-image")["style"][23:-3]
+                        image_data = download_image(original_image_url)
+                        if image_data:
+                            temp_file_path = save_temp_image(image_data)
+                            if temp_file_path:
+                                file_path = 'peel/' + datetime.now().strftime("%Y%m%d%H%M%S") + '.jpg'
+                                upload_response = upload_to_supabase(temp_file_path, file_path)
+                                if upload_response:
+                                    showImage = get_supabase_image_url(file_path)
+                                else:
+                                    showImage = "app/static/sad.jpg"
+                    except Exception as e:
+                        print(f"An error occurred in processing {showTitle}: {e}")
                     try:
                         showTickets = show.find("div", class_="event-list-titles").find("a")["href"]
                     except:
@@ -332,7 +378,6 @@ def eulogy():
 
         if page.is_visible(ageVerificationBtn):
             page.click(ageVerificationBtn)
-        noThanksBtn = '//button[contains(@class, "needsclick") and text() = "NO, THANKS"]'
             
         # page.screenshot(path="debug_screenshot.png")
         page.wait_for_selector(".dice_event-listing-container", timeout=60000)  
@@ -369,9 +414,19 @@ def eulogy():
             if existing_event is None:
                 try:
                     showImageElement = show.find("img")
-                    showImage = showImageElement.get('src')
-                except:
-                    showImage = "app/static/sad.jpg"
+                    original_image_url = showImageElement.get('src')
+                    image_data = download_image(original_image_url)
+                    if image_data:
+                        temp_file_path = save_temp_image(image_data)
+                        if temp_file_path:
+                            file_path = 'peel/' + datetime.now().strftime("%Y%m%d%H%M%S") + '.jpg'
+                            upload_response = upload_to_supabase(temp_file_path, file_path)
+                            if upload_response:
+                                showImage = get_supabase_image_url(file_path)
+                            else:
+                                showImage = "app/static/sad.jpg"
+                except Exception as e:
+                    print(f"An error occurred in processing {showTitle}: {e}")
                 try:
                     showTickets = show.find("a")['href']
                 except:
@@ -458,9 +513,19 @@ def fleetwoods():
                 continue
             if existing_event is None:
                 try:
-                    showImage = show.find('img')["style"][22:-2]
-                except:
-                    showImage = "app/static/sad.jpg"
+                    original_image_url = show.find('img')["style"][22:-2]
+                    image_data = download_image(original_image_url)
+                    if image_data:
+                        temp_file_path = save_temp_image(image_data)
+                        if temp_file_path:
+                            file_path = 'peel/' + datetime.now().strftime("%Y%m%d%H%M%S") + '.jpg'
+                            upload_response = upload_to_supabase(temp_file_path, file_path)
+                            if upload_response:
+                                showImage = get_supabase_image_url(file_path)
+                            else:
+                                showImage = "app/static/sad.jpg"
+                except Exception as e:
+                    print(f"An error occurred in processing {showTitle}: {e}")
                 try:
                     secondHalfOfLink = show.find("a")['href']
                     showTickets = 'https://app.showslinger.com' + secondHalfOfLink
