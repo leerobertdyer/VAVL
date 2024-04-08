@@ -1,4 +1,4 @@
-from flask import render_template, request
+from flask import render_template, request, jsonify
 from .models import Event
 from app import app
 from datetime import datetime, timedelta
@@ -12,7 +12,6 @@ def helper(allEvents):
     while lastDate < today:
         i += 1
         lastDate = allEvents[i].show_date.date()
-    # print('LAST DATE: ', lastDate)
     events = []
     events.append({'newDate': lastDate.strftime('%B %-d, %Y')})
 
@@ -24,11 +23,21 @@ def helper(allEvents):
             lastDate = e.show_date.date()
         events.append({'venue': e.venue, 'title': e.title, 'tickets': e.tickets, 'image': e.image})
     return events
+
+@app.route('/next-events')
+def nextEvents():
+    page = request.args.get('page', 2, type=int)
+    per_page = request.args.get('per_page', 10, type=int)
+    paginated_events = Event.query.order_by(Event.show_date).paginate(page=page, per_page=per_page, error_out=False)
+    events = helper(paginated_events.items)
+    return jsonify({'events': events, 'has_next': paginated_events.has_next})
             
 @app.route('/')
 @app.route('/home')
 def home():
-    e = Event.query.order_by(Event.show_date).all()
+    page = request.args.get('page', 2, type=int)
+    per_page = request.args.get('per_page', 10, type=int)
+    e = Event.query.order_by(Event.show_date).paginate(page=page, per_page=per_page, error_out=False).items
     events = helper(e)
     lastDate = events[0]
     return render_template('home.html', events=events, lastDate=lastDate)
