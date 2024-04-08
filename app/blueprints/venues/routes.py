@@ -42,7 +42,7 @@ def eagle():
                         existing_event = Event.query.filter_by(title=showTitle, show_date=showDate).first()
                         if existing_event:
                             print(f'{showTitle} already in db: skipping')
-                            continue
+                            return eagleEvents
                         if existing_event is None:
                             try:
                                 original_image_url = child.find("img", class_="eventListImage")['src'] 
@@ -115,7 +115,7 @@ def peel():
                         existing_event = Event.query.filter_by(title=showTitle, show_date=showDate).first()
                         if existing_event:
                             print(f'{showTitle} already in db: skipping')
-                            continue
+                            return peelEvents
                         if existing_event is None:
                             try:
                                 original_image_url = child.find("img", class_="eventListImage")['src'] 
@@ -191,7 +191,7 @@ def rabbit():
                 existing_event = Event.query.filter_by(title=showTitle, show_date=showDate).first()
                 if existing_event:
                     print(f'{showTitle} already in db: skipping')
-                    continue
+                    return rabbitEvents
                 if existing_event is None:
                     try:
                         original_image_url = show.find("img", class_="tribe-events-calendar-list__event-featured-image")['src'] 
@@ -260,7 +260,7 @@ def cherokee():
                 existing_event = Event.query.filter_by(title=showTitle, show_date=showDate).first()
                 if existing_event:
                     print(f'{showTitle} already in db: skipping')
-                    continue
+                    return cherokeeEvents
                 if existing_event is None:
                     try:
                         original_image_url = show.find("div", class_="image-wrapper").find("img")['src'] 
@@ -327,7 +327,7 @@ def salvage():
                 existing_event = Event.query.filter_by(title=showTitle, show_date=showDate).first()
                 if existing_event:
                     print(f'{showTitle} already in db: skipping')
-                    continue
+                    return salvageEvents
                 if existing_event is None:
                     try:
                         original_image_url = show.find("a", class_="event-list-image")["style"][23:-3]
@@ -410,7 +410,7 @@ def eulogy():
             existing_event = Event.query.filter_by(title=showTitle, show_date=showDate).first()
             if existing_event:
                 print(f'{showTitle} already in db: skipping')
-                continue
+                return eulogyEvents
             if existing_event is None:
                 try:
                     showImageElement = show.find("img")
@@ -510,7 +510,7 @@ def fleetwoods():
             existing_event = Event.query.filter_by(title=showTitle, show_date=showDate).first()
             if existing_event:
                 print(f'{showTitle} already in db: skipping')
-                continue
+                return fleetwoodsEvents
             if existing_event is None:
                 try:
                     original_image_url = show.find('img')["style"][22:-2]

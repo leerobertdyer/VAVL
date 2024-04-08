@@ -1,30 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta property="og:title" content="Ashvenue" />
+    <meta
+      property="og:description"
+      content="All your Asheville shows on one page."/>
+    <meta
+      property="og:image"
+      content="https://www.ashvenue.com/static/images/ashvenueSharing.png"/>
+    <meta property="og:url" content="https://www.ashvenue.com" />
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Ashvenue" />
+    <meta
+      name="twitter:description"
+      content="All your Asheville shows on one page."/>
+    <meta
+      name="twitter:image"
+      content="https://www.ashvenue.com/static/images/ashvenueSharing.png" />
+
     <title>Venue AVL</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Salsa&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../static/styles/shared.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-</head>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-68CJD8TRCH"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Salsa&display=swap"
+      rel="stylesheet"/>
+    <link rel="stylesheet" href="../static/styles/shared.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"/>
+  </head>
+  <!-- Google tag (gtag.js) -->
+  <script
+    async
+    src="https://www.googletagmanager.com/gtag/js?id=G-68CJD8TRCH"
+  ></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
 
-  gtag('config', 'G-68CJD8TRCH');
-</script>
+    gtag("config", "G-68CJD8TRCH");
+  </script>
 
-<body>
-    {% block content %}
-    {% endblock %}
+  <body>
+    {% block content %} {% endblock %}
     <script src="../static/main.js"></script>
-</body>
-
+  </body>
 </html>
