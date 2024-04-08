@@ -6,7 +6,8 @@ const eventContainer = document.querySelector(".eventsDiv");
 document.addEventListener("scroll", async () => {
   if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 10) {
     currentPage += 1;
-    const response = await fetch(`${homeURL}/next-events?page=${currentPage}`);
+    const url = homeURL.includes("home") ? `${homeURL.slice(0, -5)}/next-events?page=${currentPage}` : `${homeURL}/next-events?page=${currentPage}`;
+    const response = await fetch(url);
     const data = await response.json();
     console.log(data);
     for (const event of data.events) {

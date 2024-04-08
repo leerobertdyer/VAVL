@@ -1,13 +1,11 @@
 from . import venues
 from bs4 import BeautifulSoup
-import requests
 from ...models import Event
 from datetime import datetime
 from app import db
 from playwright.sync_api import sync_playwright
-import requests
 from .imageHelpers import save_temp_image, download_image, upload_to_supabase, get_supabase_image_url
-from .beautifulScraper import beautifulScraper
+from .beautifulScraper import beautifulScraper, headers
 
 @venues.route('/eagle')
 def eagle():
@@ -19,7 +17,7 @@ def eagle():
     eagleEvents = beautifulScraper("https://www.thegreyeagle.com/calendar/", eventContainer, dateContainer, titleContainer, imageContainer, ticketContainerIdOrClass, "Grey Eagle")
     return eagleEvents
 
-@venues.route('/peel') ## Still need to run these and down
+@venues.route('/peel') 
 def peel():
     eventContainer={"container": "div", "classes": "col-12 eventWrapper rhpSingleEvent py-4 px-0"}
     dateContainer={"container": "div", "classes": "mb-0 eventMonth singleEventDate text-uppercase"}
@@ -68,25 +66,6 @@ def staticage():
     ticketContainerIdOrClass = "border-x-0 border-b-2 last-of-type:border-b-0 border-background-200 p-3 false"
     staticageEvents = beautifulScraper("https://www.staticagenc.com/events", eventContainer, dateContainer, titleContainer, imageContainer, ticketContainerIdOrClass, "Static Age")
     return staticageEvents
-
-    # url = 'https://www.staticagenc.com/events'
-    # resp = requests.get(url, headers=headers)
-    # soup = BeautifulSoup(resp.content, 'html.parser')
-    
-    # staticageEvents = []
-    
-    # if resp.status_code == 200:
-    #     showDivs = soup.find("div", class_="grid grid-cols-1 gap-1")
-    #     for show in showDivs:
-    #         try:
-    #             show_date_raw = show.find("span").text.strip()
-    #             show_date = datetime.strptime(show_date_raw, "%a %d %b %Y")
-    #         except Exception as e:
-    #             print(f'Error: {e}')
-    #             continue
-                
-    # return staticageEvents
-
 
 @venues.route('/eulogy')
 def eulogy():
