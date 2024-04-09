@@ -9,6 +9,9 @@ def setShowDateRaw(show, dateContainer, soup):
         year = parent_div.find('div', class_='event-list-year').get_text(strip=True)
         show_date_raw = f"{day} {month} {date_number} {year}"
         return show_date_raw
+    elif dateContainer["classes"] == "sc-hKgILt sc-jUEnpm gXKGT fmxDzY":
+        show_date_raw = show.find(dateContainer["container"], class_=dateContainer["classes"]).text.split('-')[0].strip()
+        return show_date_raw  
     else:
         show_date_raw = show.find(dateContainer["container"], class_=dateContainer["classes"]).text.strip()
         return show_date_raw
@@ -43,9 +46,21 @@ def parse_date(date_str):
                     return datetime.strptime(corrected_date_without_time, date_format)
                 except ValueError:
                     continue
+            if 'April' in date_without_time:
+                try:
+                    corrected_date_without_time = date_without_time.replace('April', 'Apr')
+                    return datetime.strptime(corrected_date_without_time, date_format)
+                except ValueError:
+                    continue
+            if 'July' in date_without_time:
+                try:
+                    corrected_date_without_time = date_without_time.replace('July', 'Jul')
+                    return datetime.strptime(corrected_date_without_time, date_format)
+                except ValueError:
+                    continue
     raise ValueError(f"Date format not supported: {date_without_time}")
 
-def find_ticket_link(show, container_id):
+def find_ticket_link(show, container_id, event_calendar_url):
     # Try finding the container by ID, which could be any tag (div, span, etc.)
     container = show.find(id=container_id) or show.find(class_=container_id)
     if container:
@@ -58,4 +73,4 @@ def find_ticket_link(show, container_id):
     if direct_link and direct_link.has_attr('href'):
         return direct_link['href']
     # If no link is found
-    return "Tickets Not Found"
+    return event_calendar_url

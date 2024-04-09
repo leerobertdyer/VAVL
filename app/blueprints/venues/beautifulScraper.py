@@ -26,8 +26,12 @@ def beautifulScraper(url, eventContainer, dateContainer, titleContainer, imageCo
                 except ValueError as e:
                     print(f"Error parsing date: {e}")
                     continue
-                
-                show_title = show.find(name=titleContainer["container"], class_=titleContainer["classes"]).text.strip()
+                if titleContainer["classes"] == "sc-hKgILt sc-jUEnpm gXKGT fmxDzY": 
+                    # the odd special case
+                    show_title_parts = show.find(name=titleContainer["container"], class_=titleContainer["classes"]).text.split('-')[1:]
+                    show_title = ' '.join(show_title_parts).strip()
+                else:
+                    show_title = show.find(name=titleContainer["container"], class_=titleContainer["classes"]).text.strip()
                 if 'ORANGE PEEL EVENTS & ASHEVILLE BREWING PRESENTS' in show_title:
                     show_title = show_title.replace('ORANGE PEEL EVENTS & ASHEVILLE BREWING PRESENTS', '').strip()
                 existing_event = Event.query.filter_by(title=show_title, show_date=show_date).first()
@@ -44,7 +48,7 @@ def beautifulScraper(url, eventContainer, dateContainer, titleContainer, imageCo
                             original_image_url = original_image_url.split('?')[0]
                         image_data = download_image(original_image_url)
                         if image_data is None:
-                            image_data = download_image('https://www.ashevenue.com/static/images/sad.jpeg')
+                            show_image = 'https://www.ashevenue.com/static/images/sad.jpeg'
                         if image_data:
                             temp_file_path = save_temp_image(image_data)
                             if temp_file_path:
@@ -56,25 +60,21 @@ def beautifulScraper(url, eventContainer, dateContainer, titleContainer, imageCo
                                     show_image = get_supabase_image_url(file_path)
                                 else:
                                     show_image = "https://www.ashevenue.com/static/images/sad.jpeg"
-                            try:    
-                                show_tickets = find_ticket_link(show, ticketContainerIdOrClass)
-                            except Exception as e:
-                                show_tickets = "Tickets Not Found"
-                                print(f"An error occurred while fetching tickets: {e}")
-                            venueEvents.append({
-                                "showDate": show_date, 
-                                "showTitle": show_title, 
-                                "showImage": show_image, 
-                                "showTickets": show_tickets})
-                            new_event = Event(
-                                venue = venueName,
-                                title = show_title,
-                                show_date = show_date,
-                                tickets = show_tickets,
-                                image = show_image,
-                            )
-                            db.session.add(new_event)
-                            db.session.commit()
+                        show_tickets = find_ticket_link(show, ticketContainerIdOrClass, url)
+                        venueEvents.append({
+                            "showDate": show_date, 
+                            "showTitle": show_title, 
+                            "showImage": show_image, 
+                            "showTickets": show_tickets})
+                        new_event = Event(
+                            venue = venueName,
+                            title = show_title,
+                            show_date = show_date,
+                            tickets = show_tickets,
+                            image = show_image,
+                        )
+                        db.session.add(new_event)
+                        db.session.commit()
                     except Exception as e:
                         print(f"An error occurred in processing {show_title}: {e}")     
         except Exception as e:

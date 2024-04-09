@@ -66,6 +66,25 @@ def staticage():
     ticketContainerIdOrClass = "border-x-0 border-b-2 last-of-type:border-b-0 border-background-200 p-3 false"
     staticageEvents = beautifulScraper("https://www.staticagenc.com/events", eventContainer, dateContainer, titleContainer, imageContainer, ticketContainerIdOrClass, "Static Age")
     return staticageEvents
+@venues.route('/musichall')
+def musicHall():
+    eventContainer={"container": "article", "classes": "wfea-grid_event post status-live free city-asheville region-nc country-us event__public event__available"}
+    dateContainer={"container": "time", "classes": "eaw-time published"}
+    titleContainer={"container": "h4", "classes": "wfea-header__title entry-title"}
+    imageContainer={"container": "img", "classes": "wp-post-image", "attribute": "src"}
+    ticketContainerIdOrClass = "wfea-popup-booknow-6614b5130f0dc-878519905687"
+    musicHallEvents = beautifulScraper("https://www.ashevillemusichall.com/all-shows/", eventContainer, dateContainer, titleContainer, imageContainer, ticketContainerIdOrClass, "Asheville Music-Hall")
+    return musicHallEvents
+
+@venues.route('/odd')
+def odd():
+    eventContainer={"container": "a", "classes": "sc-pFZIQ sc-hHftDr ldGKnQ dkgIhC group"}
+    dateContainer={"container": "p", "classes": "sc-hKgILt sc-jUEnpm gXKGT fmxDzY"}
+    titleContainer={"container": "p", "classes": "sc-hKgILt sc-jUEnpm gXKGT fmxDzY"}
+    imageContainer={"container": "img", "classes": "sc-iBPRYJ sc-idOhPF gLxBPj gLKoXC", "attribute": "src"}
+    ticketContainerIdOrClass = "sc-pFZIQ sc-hHftDr ldGKnQ dkgIhC group"
+    oddEvents = beautifulScraper("https://linktr.ee/theoddavl", eventContainer, dateContainer, titleContainer, imageContainer, ticketContainerIdOrClass, "The Odditorium")
+    return oddEvents
 
 @venues.route('/eulogy')
 def eulogy():
