@@ -1,24 +1,27 @@
 .mainSortDiv {
-    background-image: url('../images/avlBackdrop.jpeg');
-    background-size: 1500px;
-    width: 100vw;
-    height: 100vh;
+    background-image: url('../images/brick1.jpeg');
+    background-size: cover;
+    width: fit-content;
+    height: fit-content;
     margin: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding-bottom: 120px;
+
 }
 
 .venueSortDiv {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
-    align-items: center;
-    width: 100%;
+    align-items: start;
+    width: 95%;
+    max-width: 400px;
     gap: 5px;
     margin-top: 20px;
     background: linear-gradient(to bottom right, navajowhite, wheat, goldenrod);
-    padding: 10px;
+    padding: 10px 0 10px 50px;
     border: solid black 5px;
 }
 
@@ -66,10 +69,12 @@
 }
 
 .datePicker {
-    height: 55px;
+    height: 55px !important;
     width: 308px;
     border: solid black 1px;
     border-radius: 5px;
+    position:absolute;
+    top: 22rem;
 }
 .datePicker:hover {
     cursor: pointer;
@@ -80,14 +85,21 @@
     text-align: center;
 }
 
+#dateHeader {
+    margin-bottom: 40px;
+}
+
 .submitSort {
     background-color: black;
     color: hotpink;
     margin-top: 30px;
-    height: 40px;
-    width: 120px;
+    height: 55px;
+    width: 300px;
     border-radius: 12px;
     border: white solid 2px;
+    position: fixed;
+    bottom: 10px;
+    margin: auto;
 }
 .submitSort:hover {
     color: black;

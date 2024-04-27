@@ -1,12 +1,11 @@
 html * {
     box-sizing: border-box;
-    font-family: 'Salsa', cursive;
+    font-family: 'Salsa';
 }
 
 body {
     padding: 0;
     margin: 0;
-    font-family:monospace;
     width: 100vw;
     height: fit-content;
 }

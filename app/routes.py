@@ -19,7 +19,7 @@ def helper(allEvents):
         if process_events:
             if lastDate is None or event_date > lastDate:
                 lastDate = event_date
-                events.append({'newDate': lastDate.strftime('%B %-d, %Y')})
+                events.append({'newDate': lastDate.strftime('%a, %b %-d')})
             events.append({'venue': event.venue, 'title': event.title, 'tickets': event.tickets, 'image': event.image})
     return events
             

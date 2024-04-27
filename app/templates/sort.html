@@ -1,49 +1,61 @@
 {% block style %}
-<meta property="og:title" content="Ashvenue">
-<meta property="og:description" content="All your Asheville shows on one page.">
-<meta property="og:image" content="../static/images/ashvenueSharing.png">
-<meta property="og:url" content="https://www.ashvenue.com">
+<meta property="og:title" content="Ashvenue" />
+<meta
+  property="og:description"
+  content="All your Asheville shows on one page."
+/>
+<meta property="og:image" content="../static/images/ashvenueSharing.png" />
+<meta property="og:url" content="https://www.ashvenue.com" />
 
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Ashvenue">
-<meta name="twitter:description" content="All your Asheville shows on one page.">
-<meta name="twitter:image" content="../static/images/ashvenueSharing.png">
-<link rel="icon" type="image/x-icon"href="../static/images/vavlFavicon.ico">
-<link rel="stylesheet" href="../static/styles/sort.css">
-{% endblock %}
-
-{% extends 'base.html' %}
-
-{% include './includes/nav.html'%}
-
-{% block content %}
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Ashvenue" />
+<meta
+  name="twitter:description"
+  content="All your Asheville shows on one page."
+/>
+<meta name="twitter:image" content="../static/images/ashvenueSharing.png" />
+<link rel="icon" type="image/x-icon" href="../static/images/vavlFavicon.ico" />
+<link rel="stylesheet" href="../static/styles/sort.css" />
+{% endblock %} {% extends 'base.html' %} {% include './includes/nav.html'%} {%
+block content %}
 <div class="mainSortDiv">
-        <h1 class="selectTitles">Select Your Venues:</h1>
-        <div class="venueSortDiv">
-                {% for v in venues %}
-                <label  class="eachBox" for="{{ v }}">
-                    <input type="checkbox" class="venueList" id="{{ v }}" data-target="{{ v }}"/>
-                    {{ v }}
-                </label>
-                {% endfor %}
-        </div>
-        <h1 class="selectTitles">Any specific dates?</h1>
-            <input  type="text" id="startDate" placeholder="Select Date(s)" />
-    <button id="submitSort" class="submitSort">Get Shows</button>
+    <h2 class="selectTitles" id="dateHeader">Any specific dates?</h2>
+    <input type="text" id="startDate" placeholder="Select Date(s)"/>
+  <h3 class="selectTitles">Select Your Venues:</h3>
+  <div class="venueSortDiv">
+    {% for v in venues %}
+    <label class="eachBox" for="{{ v }}">
+      <input
+        type="checkbox"
+        class="venueList"
+        id="{{ v }}"
+        data-target="{{ v }}"
+      />
+      {{ v }}
+    </label>
+    {% endfor %}
+  </div>
+  <button id="submitSort" class="submitSort">Get Shows</button>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
-    flatpickr("#startDate", {
-        mode: "range",
-        altInput: true,
-        altFormat: "F j, Y",
-        dateFormat: "Y-m-d",
-        minDate: "{{ currentDate }}",
-        onChange: (selectedDates, dateStr, instance) => {
-            const formattedRange = selectedDates.map(date => date.toLocaleDateString('en-US',{ month: 'long', day: 'numeric', year: 'numeric'}))
-            handleDate(formattedRange)
-        },
-        altInputClass: 'datePicker'
-    });
+  flatpickr("#startDate", {
+    mode: "range",
+    altInput: true,
+    altFormat: "F j, Y",
+    dateFormat: "Y-m-d",
+    minDate: "{{ currentDate }}",
+    onChange: (selectedDates, dateStr, instance) => {
+      const formattedRange = selectedDates.map((date) =>
+        date.toLocaleDateString("en-US", {
+          month: "long",
+          day: "numeric",
+          year: "numeric",
+        })
+      );
+      handleDate(formattedRange);
+    },
+    altInputClass: "datePicker",
+  });
 </script>
 {% endblock %}
