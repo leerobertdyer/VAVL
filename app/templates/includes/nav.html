@@ -1,19 +1,22 @@
 {% block style %}
-<link rel="stylesheet" href="../../static/styles/nav.css">
-{% endblock %}
-
-{% block content %}
+<link rel="stylesheet" href="../../static/styles/nav.css" />
+{% endblock %} {% block content %}
 <div class="navContainer">
-    <img src="../../static/images/AVLmusic.jpeg" class="navLogo" alt="logo">
-    <div class="navRight">
-
-        <h1 class='title'>AVL Show Tracker
-        </h1>
-        <div class="navLinks">
-            <a class="sortLink"href='{{ url_for("home") }}'>Shows</a>            
-                <a class="sortLink" href='{{ url_for("sort") }}'>Sort Page</a>
-            </div>
-        </div>
+  <img src="../../static/images/AVLmusic.jpeg" class="navLogo" alt="logo" />
+  <div class="navRight">
+    <h1 class="title">AVL Show Tracker</h1>
+    <div class="navLinks">
+      <a class="sortLink" id="homeLink" href='{{ url_for("home") }}'>Clear</a>
+      <a class="sortLink" id="sortLink" href='{{ url_for("sort") }}'>Sort</a>
     </div>
+  </div>
 </div>
+<script>
+  const currentLocation = window.location.href;
+  console.log(currentLocation);
+  if (currentLocation === "http://127.0.0.1:5000/" || currentLocation === "http://127.0.0.1:5000/home" || currentLocation === "https://www.ashevenue.com/" || currentLocation === "https://www.ashevenue.com/home")
+    document.getElementById("homeLink").style.display = "none";
+  if (currentLocation === "http://127.0.0.1:5000/sort" || currentLocation === "https://www.ashevenue.com/sort")
+    document.getElementById("sortLink").style.display = "none";
+</script>
 {% endblock %}

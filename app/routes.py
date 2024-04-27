@@ -1,7 +1,8 @@
 from flask import render_template, request, jsonify
 from .models import Event
 from app import app
-from datetime import datetime
+from datetime import datetime, date
+from app import db
 
 def helper(allEvents):
     if not allEvents:
@@ -54,3 +55,14 @@ def sorted():
     events = helper(query)
     lastDate = events[0]
     return render_template('home.html', events=events, lastDate=lastDate)
+
+@app.route('/prune')
+def prune():
+    today = date.today()
+    eventsToBePruned = Event.query.filter(Event.show_date < today).all()
+    titles = [event.title for event in eventsToBePruned]
+    for event in eventsToBePruned:
+        print('pruning: ', event.title, event.show_date)
+        db.session.delete(event)
+    db.session.commit()
+    return f'Pruned {len(eventsToBePruned)} events: {titles}'

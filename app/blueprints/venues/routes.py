@@ -66,6 +66,7 @@ def staticage():
     ticketContainerIdOrClass = "border-x-0 border-b-2 last-of-type:border-b-0 border-background-200 p-3 false"
     staticageEvents = beautifulScraper("https://www.staticagenc.com/events", eventContainer, dateContainer, titleContainer, imageContainer, ticketContainerIdOrClass, "Static Age")
     return staticageEvents
+
 @venues.route('/musichall')
 def musicHall():
     eventContainer={"container": "article", "classes": "wfea-grid_event post status-live free city-asheville region-nc country-us event__public event__available"}
@@ -78,11 +79,11 @@ def musicHall():
 
 @venues.route('/odd')
 def odd():
-    eventContainer={"container": "a", "classes": "sc-pFZIQ sc-hHftDr ldGKnQ dkgIhC group"}
-    dateContainer={"container": "p", "classes": "sc-hKgILt sc-jUEnpm gXKGT fmxDzY"}
-    titleContainer={"container": "p", "classes": "sc-hKgILt sc-jUEnpm gXKGT fmxDzY"}
-    imageContainer={"container": "img", "classes": "sc-iBPRYJ sc-idOhPF gLxBPj gLKoXC", "attribute": "src"}
-    ticketContainerIdOrClass = "sc-pFZIQ sc-hHftDr ldGKnQ dkgIhC group"
+    eventContainer={"container": "div", "classes": "sc-bdfBwQ pkAuV"}
+    dateContainer={"container": "p", "classes": "theOdd"}
+    titleContainer={"container": "p", "classes": "theOdd"}
+    imageContainer={"container": "img", "classes": "theOdd", "attribute": "src"}
+    ticketContainerIdOrClass = "theOdd"
     oddEvents = beautifulScraper("https://linktr.ee/theoddavl", eventContainer, dateContainer, titleContainer, imageContainer, ticketContainerIdOrClass, "The Odditorium")
     return oddEvents
 
@@ -237,7 +238,7 @@ def fleetwoods():
                     if image_data:
                         temp_file_path = save_temp_image(image_data)
                         if temp_file_path:
-                            file_path = 'peel/' + datetime.now().strftime("%Y%m%d%H%M%S") + '.jpg'
+                            file_path = 'fleetwoods/' + datetime.now().strftime("%Y%m%d%H%M%S") + '.jpg'
                             upload_response = upload_to_supabase(temp_file_path, file_path)
                             if upload_response:
                                 showImage = get_supabase_image_url(file_path)

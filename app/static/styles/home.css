@@ -31,6 +31,7 @@ background-color: lightpink;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
     width: 100vw;
     flex-wrap: wrap;
 }
@@ -149,3 +150,9 @@ a {
     color: tomato;
 }
 
+@media screen and (max-width: 500px) {
+    .blackBorder, .eventLink {
+        height: 50vw;
+        width: 82vw;
+    }
+}

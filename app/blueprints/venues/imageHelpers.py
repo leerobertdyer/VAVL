@@ -3,11 +3,6 @@ import os
 from app import supabase
 import requests
 
-def save_temp_image(image_data, extension='jpg'):
-    with tempfile.NamedTemporaryFile(delete=False, suffix=f'.{extension}') as temp_file:
-        temp_file.write(image_data)
-        return temp_file.name
-
 def download_image(image_url):
     if image_url.startswith('/RecordBin'):
         return None 
@@ -16,6 +11,11 @@ def download_image(image_url):
         return response.content
     else:
         return None
+    
+def save_temp_image(image_data, extension='jpg'):
+    with tempfile.NamedTemporaryFile(delete=False, suffix=f'.{extension}') as temp_file:
+        temp_file.write(image_data)
+        return temp_file.name
     
 def upload_to_supabase(temp_file_path, upload_path):
     try:
