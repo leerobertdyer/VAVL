@@ -172,11 +172,11 @@ def eulogy():
 def fleetwoods():
     url = 'https://fleetwoodschapel.com/calendar-of-events/'
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=False)  
+        browser = p.chromium.launch(headless=True)  
         context = browser.new_context(user_agent=headers['User-Agent'])    
         page = context.new_page() 
 
-        page.goto(url)
+        page.goto(url, timeout=240000)
         page.wait_for_selector("#showslinger-widget-container-47077")  
 
         if "404" in page.title():
