@@ -36,15 +36,25 @@ background-color: lightpink;
     flex-wrap: wrap;
 }
 
+.dateDiv {
+    width: 100vw;
+    height: auto;
+    display: flex;
+    justify-content: center;
+}
+
 .dateHeader {
     color: black;
     background-color: white;
     border: solid black 3px;
-    width: 50%;
+    width: 60%;
+    height: fit-content;
     padding: 10px 0;
     text-align: center;
     border-radius: 12px;
     min-width: 200px;
+    max-width: 600px;
+    font-size: 20px;
 }
 
 .firstDate {
@@ -54,14 +64,14 @@ background-color: lightpink;
 .eventsDiv {
   display: flex;
   flex-flow: row wrap;
-  justify-content: space-around;
+  justify-content: space-evenly;
   gap: 20px;
-  width: 80%;
+  width: 95vw;
 }
 
 .blackBorder {
     border: solid black 3px;
-    border-radius: 3px;
+    border-radius: 8px;
     transition: 2s;
 }
 .blackBorder:hover {
@@ -73,17 +83,19 @@ background-color: lightpink;
     overflow: hidden;
     flex-shrink: 1;
     width: 82vw;
-    height: 37vw;
-    max-width: 800px;
+    height: auto;
+    max-width: 600px;
+    max-height: 500px;
+    min-height: 300px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
     border: black solid 2px;
-    border-radius: 3px;
     color: antiquewhite;
     gap: 5px;
     background-color: black;
+    border-radius: 4px;
 }
 
 
@@ -91,10 +103,11 @@ a {
     text-decoration: none !important;
 }
 
-.eventVenue, .eventTitle, .eventDate {
+.eventVenue, .eventTitle, .eventDate, .eventTitleSmaller {
     background-color: rgba(12, 5, 5, 0.95);
     text-align: center;
     margin: 0;
+    padding: 15px;
     width: 100%;
 }
 
@@ -104,56 +117,88 @@ a {
 }
 
 .eventTitle {
+    font-size: 18px;
     color: gold;
-    padding: 15px 0;
+    border-top: solid white 1px;
+    border-bottom: solid white 1px;
+}
+.eventTitleSmaller {
+    font-size: 12px;
+    color: gold;
     border-top: solid white 1px;
     border-bottom: solid white 1px;
 }
 
 .eventDate {
     font-weight: 900;
-
 }
 
 .eagle {
-    border: solid lightgray 5px;
+    border: solid rgb(156, 156, 156) 10px;
 }
-
 .eagle > h2 {
-    color: lightgray;
+    color: rgb(156, 156, 156);
 }
-
 .peel {
-    border: solid orange 5px;
+    border: solid orange 10px;
 }
 .peel > h2 {
     color: orange;
 }
-
 .rabbit {
-    border: pink solid 5px;
+    border: pink solid 10px;
 }
 .rabbit > h2 {
     color: pink;
 }
-
 .salvage {
-    border: olivedrab solid 5px;
+    border: olivedrab solid 10px;
 }
 .salvage > h2 {
     color: olivedrab;
 }
-
 .cherokee {
-    border: tomato solid 5px;
+    border: tomato solid 10px;
 }
 .cherokee > h2 {
     color: tomato;
 }
+.fleetwoods {
+    border: rgb(181, 121, 0) solid 10px;
+}
+.fleetwoods > h2 {
+    color: rgb(181, 121, 0);
+}
+.staticage {
+    border: rgb(0, 134, 160) solid 10px;
+}
+.staticage > h2 {
+    color: rgb(0, 134, 160);
+}
+.musichall {
+    border: rgb(0, 43, 160) solid 10px;
+}
+.musichall > h2 {
+    color: rgb(0, 43, 160);
+}
+.eulogy {
+    border: rgb(103, 2, 0) solid 10px;
+}
+.eulogy > h2 {
+    color: rgb(158, 3, 0);
+}
 
 @media screen and (max-width: 500px) {
-    .blackBorder, .eventLink {
+    .eventsDiv {
+        gap: 50px;
+    }
+     .eventLink {
         height: 50vw;
         width: 82vw;
+    }
+}
+@media screen and (min-width: 700px) {
+    .eventTitleSmaller {
+        font-size: 18px;
     }
 }

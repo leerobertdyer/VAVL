@@ -1,3 +1,8 @@
+@font-face {
+    font-family: 'ShadowHand';
+    src: url('/static/fonts/ShadowHand.ttf') format('truetype');
+}
+
 .navContainer {
     display: flex;
     align-items: end;
@@ -30,10 +35,11 @@
 }
 
 .title {
-    font-size: 3vw;
-    font-family: 'salsa';
+    font-size: 3.5vw;
+    font-family: 'ShadowHand';
     text-align: center;
     margin: 0;
+    flex-grow: 1;
 }
 
 .sortLink {
