@@ -4,7 +4,7 @@ import dateparser
 
 def setShowDateRaw(show, dateContainer):
     try:
-        # =========> The Grey Eagle <=========
+    # =========> The Grey Eagle <=========
         if dateContainer["classes"] == "mb-0 eventMonth singleEventDate text-uppercase":
             show_date_raw = show.find(
                 dateContainer["container"], class_=dateContainer["classes"]).text.strip()
@@ -30,6 +30,30 @@ def setShowDateRaw(show, dateContainer):
                 'p').text.split('-')[0].strip()
             return show_date_raw
 
+    # ==========> Eulogy <===========
+        elif dateContainer["container"] == "time":
+            try:
+                show_date_raw = show.find("time").text[:11].strip()
+                if show_date_raw[-1] == "―":
+                    show_date_raw = show_date_raw[:-2]
+                show_date_raw += " 2024"
+                return show_date_raw
+            except Exception as e:
+                print(f"Error setting show date: {e}")
+                return None 
+            
+    # ==========> Fleetwoods <===========
+        elif dateContainer["classes"] == "text-color":
+            try:
+                show_date_raw = show.find("p").text[:11].strip()
+                if show_date_raw[-1] == ",":
+                    show_date_raw = show_date_raw[:-2]
+                show_date_raw += " 2024"
+                return show_date_raw
+            except Exception as e:
+                print('Error getting date for fleetwood:', e)
+                showDate = "Date/time Not Found"
+                
     # ==========> Everything Else <===========
         else:
             show_date_raw = show.find(
@@ -37,7 +61,7 @@ def setShowDateRaw(show, dateContainer):
             return show_date_raw
         
     except Exception as e:
-        print(f"Error setting show date: {e} for {show}")
+        print(f"Error setting show date: {e}")
         return None
 
 
