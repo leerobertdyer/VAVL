@@ -12,6 +12,10 @@
 <div class="mainDiv" id="mainDiv">
 
         <div class="eventsDiv">
+            <form class="searchBar" action="{{ url_for('search') }}" method="GET">
+                <input type="text" id="search" name="query" placeholder="Search for events...">
+                <button type="submit">Search</button>
+            </form>
         {% for event in events %}
             {% if event.newDate %}
             <div class="dateDiv">

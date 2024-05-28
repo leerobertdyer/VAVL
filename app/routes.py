@@ -4,6 +4,7 @@ from app import app
 from datetime import datetime, date
 from app import db
 
+
 def helper(allEvents):
     if not allEvents:
         return []  # Return an empty list if allEvents is empty
@@ -20,9 +21,11 @@ def helper(allEvents):
             if lastDate is None or event_date > lastDate:
                 lastDate = event_date
                 events.append({'newDate': lastDate.strftime('%a, %b %-d')})
-            events.append({'venue': event.venue, 'title': event.title, 'tickets': event.tickets, 'image': event.image})
+            events.append({'venue': event.venue, 'title': event.title,
+                          'tickets': event.tickets, 'image': event.image})
     return events
-            
+
+
 @app.route('/')
 @app.route('/home')
 def home():
@@ -31,17 +34,20 @@ def home():
     lastDate = events[0]
     return render_template('home.html', events=events, lastDate=lastDate)
 
+
 @app.route('/sort')
 def sort():
     currentDate = datetime.now().date()
     venues = Event.query.distinct(Event.venue).with_entities(Event.venue).all()
     venues = [venue[0] for venue in venues]
-    finalDate = Event.query.filter(Event.show_date >= currentDate).order_by(Event.show_date.desc()).first()
+    finalDate = Event.query.filter(Event.show_date >= currentDate).order_by(
+        Event.show_date.desc()).first()
     return render_template('sort.html', venues=venues, currentDate=currentDate, finalDate=finalDate)
+
 
 @app.route('/sorted')
 def sorted():
-    selectedVenues = request.args.getlist('venue') 
+    selectedVenues = request.args.getlist('venue')
     startDate = request.args.get('start')
     endDate = request.args.get('end')
     query = Event.query
@@ -51,10 +57,11 @@ def sorted():
         query = query.filter(Event.show_date >= startDate)
     if endDate:
         query = query.filter(Event.show_date <= endDate)
-    query = query.order_by(Event.show_date).all() 
+    query = query.order_by(Event.show_date).all()
     events = helper(query)
     lastDate = events[0]
     return render_template('home.html', events=events, lastDate=lastDate)
+
 
 @app.route('/prune')
 def prune():
@@ -66,3 +73,24 @@ def prune():
         db.session.delete(event)
     db.session.commit()
     return f'Pruned {len(eventsToBePruned)} events: {titles}'
+
+
+@app.route('/search')
+def search():
+    query = request.args.get('query')
+    if not query:
+        return jsonify([])
+    dbQuery = Event.query.filter(Event.title.ilike(
+        f'%{query}%')).order_by(Event.show_date).all()
+    dbQuery = dbQuery + \
+        Event.query.filter(Event.venue.ilike(
+            f'%{query}%')).order_by(Event.show_date).all()
+    events = helper(dbQuery)
+    if not events:
+        lastDate = []
+        events = [
+            {'newDate': 'No results found'}, 
+            {'venue': 'Not found', 'image': '../static/images/sad.jpeg', 'tickets': 'www.ashevenue.com'}]
+        return render_template('home.html', events=events, lastDate=lastDate)
+    lastDate = events[0]
+    return render_template('home.html', events=events, lastDate=lastDate)
